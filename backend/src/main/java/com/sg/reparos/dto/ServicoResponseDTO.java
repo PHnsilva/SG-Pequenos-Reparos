@@ -16,8 +16,9 @@ public class ServicoResponseDTO {
     private String clienteNome;
     private String emailContato;
     private String telefoneContato;
-    private List<String> diasDisponiveisCliente; // Lista dos dias disponíveis do cliente
-    private String periodoDisponivelCliente; // Período disponível do cliente
+    private LocalDate diaEspecifico;
+    private List<LocalDate> outrosDias;
+    private LocalTime horarioDesejado;
     private String status;
     private String administradorNome;
     private LocalDate data;
@@ -36,10 +37,9 @@ public class ServicoResponseDTO {
         this.clienteNome = servico.getCliente().getNome();
         this.emailContato = servico.getEmailContato();
         this.telefoneContato = servico.getTelefoneContato();
-        this.diasDisponiveisCliente = servico.getDiasDisponiveisCliente().stream()
-                .map(Enum::name)
-                .toList();
-        this.periodoDisponivelCliente = servico.getPeriodoDisponivelCliente().name();
+        this.diaEspecifico = servico.getDiaEspecifico();
+        this.outrosDias = servico.getOutrosDiasDisponiveis();
+        this.horarioDesejado = servico.getHorarioDesejado();
         this.status = servico.getStatus().name();
         this.administradorNome = servico.getAdministrador() != null ? servico.getAdministrador().getNome() : null;
         this.data = servico.getData();
@@ -112,22 +112,6 @@ public class ServicoResponseDTO {
         this.telefoneContato = telefoneContato;
     }
 
-    public List<String> getDiasDisponiveisCliente() {
-        return diasDisponiveisCliente;
-    }
-
-    public void setDiasDisponiveisCliente(List<String> diasDisponiveisCliente) {
-        this.diasDisponiveisCliente = diasDisponiveisCliente;
-    }
-
-    public String getPeriodoDisponivelCliente() {
-        return periodoDisponivelCliente;
-    }
-
-    public void setPeriodoDisponivelCliente(String periodoDisponivelCliente) {
-        this.periodoDisponivelCliente = periodoDisponivelCliente;
-    }
-
     public String getStatus() {
         return status;
     }
@@ -159,4 +143,29 @@ public class ServicoResponseDTO {
     public void setHorario(LocalTime horario) {
         this.horario = horario;
     }
+
+    public LocalDate getDiaEspecifico() {
+        return diaEspecifico;
+    }
+
+    public void setDiaEspecifico(LocalDate diaEspecifico) {
+        this.diaEspecifico = diaEspecifico;
+    }
+
+    public List<LocalDate> getOutrosDias() {
+        return outrosDias;
+    }
+
+    public void setOutrosDias(List<LocalDate> outrosDias) {
+        this.outrosDias = outrosDias;
+    }
+
+    public LocalTime getHorarioDesejado() {
+        return horarioDesejado;
+    }
+
+    public void setHorarioDesejado(LocalTime horarioDesejado) {
+        this.horarioDesejado = horarioDesejado;
+    }
+
 }
