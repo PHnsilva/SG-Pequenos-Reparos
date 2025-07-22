@@ -36,6 +36,16 @@ public class Servico {
 
     @Column(nullable = false)
     private String telefoneContato;
+    @Column(nullable = true)
+    private LocalDate diaEspecifico;
+
+    @ElementCollection
+    @CollectionTable(name = "servico_outros_dias", joinColumns = @JoinColumn(name = "servico_id"))
+    @Column(name = "data")
+    private List<LocalDate> outrosDiasDisponiveis;
+
+    @Column(nullable = false)
+    private LocalTime horarioDesejado;
 
     // Disponibilidade informada pelo cliente
     @ElementCollection
@@ -192,6 +202,28 @@ public class Servico {
         this.motivoCancelamento = motivoCancelamento;
     }
 
-    // Getters e Setters
+    public LocalDate getDiaEspecifico() {
+        return diaEspecifico;
+    }
+
+    public void setDiaEspecifico(LocalDate diaEspecifico) {
+        this.diaEspecifico = diaEspecifico;
+    }
+
+    public List<LocalDate> getOutrosDiasDisponiveis() {
+        return outrosDiasDisponiveis;
+    }
+
+    public void setOutrosDiasDisponiveis(List<LocalDate> outrosDiasDisponiveis) {
+        this.outrosDiasDisponiveis = outrosDiasDisponiveis;
+    }
+
+    public LocalTime getHorarioDesejado() {
+        return horarioDesejado;
+    }
+
+    public void setHorarioDesejado(LocalTime horarioDesejado) {
+        this.horarioDesejado = horarioDesejado;
+    }
 
 }
