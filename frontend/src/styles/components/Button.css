@@ -1,0 +1,210 @@
+.btn-component,
+.btn-default,
+.btn-entrar,
+.btn-cadastrar,
+.btn-contratar,
+.btn-sair,
+.btn-editar,
+.btn-salvar,
+.btn-excluir,
+.btn-cancelar,
+.btn-avaliar,
+.btn-link-button,
+.btn-aceitar,
+.btn-recusar,
+.btn-concluir {
+  box-shadow: none;
+  outline: none;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-component {
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+}
+
+/* Botão padrão */
+.btn-default {
+  background-color: #003366;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  border-radius: 6px;
+}
+.btn-default:hover {
+  background-color: #002244;
+  color: white;
+}
+
+/* Botão de login */
+.btn-entrar {
+  background-color: #003366;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  border-radius: 6px;
+}
+.btn-entrar:hover {
+  background-color: #002244;
+  color: white;
+}
+
+/* Botão de cadastro */
+.btn-cadastrar {
+  background-color: #003366;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  border-radius: 6px;
+}
+.btn-cadastrar:hover {
+  background-color: #002244;
+  color: white;
+}
+
+/* Botão da landing page */
+.btn-contratar {
+  background-color: #003366;
+  color: white;
+  padding: 0.75rem 2rem; 
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: background-color 0.3s;
+}
+.btn-contratar:hover {
+  background-color: #002244;
+  color: white;
+}
+
+/* Botão Sair */
+.btn-sair {
+  background-color: #c62828;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  border-radius: 6px;
+}
+.btn-sair:hover {
+  background-color: #e53935;
+}
+
+/* Botão Editar */
+.btn-editar {
+  background-color: #003366;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  border-radius: 6px;
+}
+.btn-editar:hover {
+  background-color: #002244;
+  color: white;
+}
+
+/* Botão Salvar */
+.btn-salvar {
+  background-color: #003366;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  border-radius: 6px;
+}
+.btn-salvar:hover {
+  background-color: #002244;
+  color: white;
+}
+
+/* Botão Excluir */
+.btn-excluir {
+  background-color: #8B0000;
+  color: #fff;
+  border: 1px solid #aa2e2e;
+  padding: 0.6rem 1.2rem; 
+  border-radius: 6px;     
+  font-size: 1rem;        
+  transition: all 0.3s ease;
+}
+.btn-excluir:hover {
+  background-color: #a70000;
+  border-color: #cc4c4c;
+}
+
+/* Botão Cancelar */
+.btn-cancelar {
+  background-color: #b22222;
+  color: white;
+  padding: 0.6rem 1.2rem; 
+  border-radius: 6px;
+  font-size: 1rem;
+}
+.btn-cancelar:hover {
+  background-color: #d32f2f;
+}
+
+/* Botão Avaliar */
+.btn-avaliar {
+  background-color: #28a745;
+  color: white;
+  padding: 0.6rem 1.2rem; 
+  border-radius: 6px;
+  font-size: 1rem;
+}
+.btn-avaliar:hover {
+  background-color: #218838;
+}
+
+/* Botão Link (semelhante ao contratar) */
+.btn-link-button {
+  background-color: #003366;
+  color: white;
+  padding: 0.75rem 2rem; 
+  border-radius: 6px;
+  font-size: 1rem;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  transition: background-color 0.3s ease;
+}
+.btn-link-button:hover {
+  background-color: #002244;
+  color: white;
+}
+
+/* Botão Aceitar */
+.btn-aceitar {
+  background-color: #229251;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  border-radius: 6px;
+}
+.btn-aceitar:hover {
+  background-color: #1d8147;
+}
+
+/* Botão Recusar */
+.btn-recusar {
+  background-color: #c0392b;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  border-radius: 6px;
+}
+.btn-recusar:hover {
+  background-color: #e74c3c;
+}
+
+/* Botão Concluir */
+.btn-concluir {
+  background-color: #003366;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  border-radius: 6px;
+}
+.btn-concluir:hover {
+  background-color: #002244;
+}
