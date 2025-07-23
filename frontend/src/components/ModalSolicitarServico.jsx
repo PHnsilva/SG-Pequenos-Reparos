@@ -136,7 +136,7 @@ const ModalSolicitarServico = ({ onClose, onServicoCriado }) => {
   };
 
   // Descobre os problemas para o tipo selecionado
-  const tipoSelecionado = tiposServico.find(t => t.id === tipoServicoId);
+  const tipoSelecionado = tiposServico.find(t => t.id === Number(tipoServicoId));
   const problemas = tipoSelecionado
     ? problemasPorTipo[tipoSelecionado.nome] || []
     : [];
