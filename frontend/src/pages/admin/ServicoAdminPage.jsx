@@ -6,8 +6,16 @@ import { listarServicos } from "../../services/servicoService";
 import Button from "../../components/Button";
 import "../../styles/pages/ServicosPage.css";
 
+const STATUS_ABAS = [
+  { codigo: "ACE", label: "Aceitos", icon: "" },
+  { codigo: "CON", label: "Concluídos", icon: "" },
+  { codigo: "CAN", label: "Cancelados", icon: "" },
+  { codigo: "REC", label: "Recusados", icon: "" },
+];
+
 const ServicoAdminPage = () => {
   const [servicos, setServicos] = useState([]);
+  const [statusSelecionado, setStatusSelecionado] = useState("ACE");
 
   useEffect(() => {
     fetchServicos();
@@ -26,6 +34,8 @@ const ServicoAdminPage = () => {
     fetchServicos();
   };
 
+  const servicosFiltrados = servicos.filter(s => s.status === statusSelecionado);
+
   return (
     <div className="servicos-page-container">
       {/* Calendário */}
@@ -33,15 +43,39 @@ const ServicoAdminPage = () => {
         <CalendarioServicosAdmin servicos={servicos} />
       </div>
 
-      {/* Lista e botões */}
+      {/* Painel Admin */}
       <div className="servicos-content">
-        <div className="servicos-lista">
-          <ListaServicosAdmin
-            servicos={servicos}
-            onServicoAtualizado={handleServicoAtualizado}
-          />
+        {/* Título */}
+        <h2 className="titulo-servicos">Gerenciamento de Serviços</h2>
+
+        {/* Abas de status */}
+        <div className="abas-container">
+          {STATUS_ABAS.map(({ codigo, label, icon }) => (
+            <button
+              key={codigo}
+              className={`aba-button ${statusSelecionado === codigo ? "ativa" : ""}`}
+              onClick={() => setStatusSelecionado(codigo)}
+            >
+              <span className="aba-icon">{icon}</span> {label}
+            </button>
+          ))}
         </div>
 
+        {/* Lista */}
+        <div className="servicos-lista">
+          {servicosFiltrados.length === 0 ? (
+            <p className="mensagem-vazia">
+              Nenhum serviço com status {statusSelecionado}.
+            </p>
+          ) : (
+            <ListaServicosAdmin
+              servicos={servicosFiltrados}
+              onServicoAtualizado={handleServicoAtualizado}
+            />
+          )}
+        </div>
+
+        {/* Botões */}
         <div className="servicos-buttons">
           <Link
             to="/cliente/historico"
