@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
-import { Calendar, momentLocalizer } from "react-big-calendar";
-import moment from "moment-timezone";
-import "react-big-calendar/lib/css/react-big-calendar.css";
+import { Calendar, momentLocalizer } from "react-big-calendar";// importa locale pt-br
+import "react-big-calendar/lib/css/react-big-calendar.css"; // pode remover se quiser usar só o CSS customizado
 import ModalDetalhesServico from "./ModalDetalhesServico";
 import "../styles/components/CalendarioServicos.css";
 import { getUserProfile } from "../services/authService";
+import moment from "moment-timezone";
+import "moment/locale/pt-br"; 
+
+moment.locale("pt-br");
 
 const localizer = momentLocalizer(moment);
 
@@ -23,10 +26,14 @@ const CustomEvent = ({ event }) => {
   };
 
   return (
-    <div className="calendario-evento" style={{ backgroundColor: info.color }}>
+    <div
+      className="calendario-evento"
+      style={{ backgroundColor: info.color, borderLeft: `5px solid ${info.color}` }}
+      title={`${event.title} [${info.label}]`}
+    >
       <span>{info.icon}</span>
       <span>
-        {event.title} [{info.label}]
+        {event.title} <strong>[{info.label}]</strong>
       </span>
     </div>
   );
@@ -108,17 +115,22 @@ const CalendarioServicos = ({ servicos }) => {
         onNavigate={setDate}
         onSelectEvent={(event) => setServicoSelecionado(event)}
         messages={{
-          next: "Próximo",
-          previous: "Anterior",
-          today: "Hoje",
-          month: "Mês",
-          week: "Semana",
-          day: "Dia",
-          agenda: "Agenda",
           date: "Data",
           time: "Horário",
           event: "Serviço",
-          noEventsInRange: "Nenhum serviço neste intervalo.",
+          allDay: "Dia inteiro",
+          week: "Semana",
+          work_week: "Dias úteis",
+          day: "Dia",
+          month: "Mês",
+          previous: "Anterior",
+          next: "Próximo",
+          yesterday: "Ontem",
+          tomorrow: "Amanhã",
+          today: "Hoje",
+          agenda: "Agenda",
+          noEventsInRange: "Nenhum serviço neste período.",
+          showMore: total => `+ ver mais (${total})`,
         }}
       />
 
