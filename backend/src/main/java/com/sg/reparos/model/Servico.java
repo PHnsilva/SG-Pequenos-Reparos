@@ -9,9 +9,16 @@ import java.util.List;
 @Table(name = "servicos")
 public class Servico {
 
+    @ManyToOne
+    @JoinColumn(name = "id_problema")
+    private Problema problema;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private String problemaSelecionado;
+
 
     @Column(nullable = false)
     private String nome;
@@ -224,6 +231,18 @@ public class Servico {
 
     public void setHorarioDesejado(LocalTime horarioDesejado) {
         this.horarioDesejado = horarioDesejado;
+    }
+    public Problema getProblema() {
+        return problema;
+    }
+    public void setProblema(Problema problema) {
+        this.problema = problema;
+    }
+    public String getProblemaSelecionado() {
+        return problemaSelecionado;
+    }
+    public void setProblemaSelecionado(String problemaSelecionado) {
+        this.problemaSelecionado = problemaSelecionado;
     }
 
 }

@@ -7,6 +7,9 @@ import java.util.List;
 
 public class ServicoRequestDTO {
 
+    @NotBlank(message = "O problema selecionado é obrigatório.")
+    private String problemaSelecionado;
+
     @NotBlank(message = "O nome do serviço é obrigatório.")
     private String nome;
 
@@ -62,14 +65,14 @@ public class ServicoRequestDTO {
     public void setTipoServicoId(Long tipoServicoId) {
         this.tipoServicoId = tipoServicoId;
     }
+
     public List<LocalDate> getOutrosDias() {
-    return outrosDias;
-}
+        return outrosDias;
+    }
 
-public void setOutrosDias(List<LocalDate> outrosDias) {
-    this.outrosDias = outrosDias;
-}
-
+    public void setOutrosDias(List<LocalDate> outrosDias) {
+        this.outrosDias = outrosDias;
+    }
 
     public Long getClienteId() {
         return clienteId;
@@ -94,6 +97,7 @@ public void setOutrosDias(List<LocalDate> outrosDias) {
     public void setTelefoneContato(String telefoneContato) {
         this.telefoneContato = telefoneContato;
     }
+
     public LocalDate getData() {
         return data;
     }
@@ -116,5 +120,11 @@ public void setOutrosDias(List<LocalDate> outrosDias) {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+    public String getProblemaSelecionado() {
+        return problemaSelecionado;
+    }
+    public void setProblemaSelecionado(String problemaSelecionado) {
+        this.problemaSelecionado = problemaSelecionado;
     }
 }

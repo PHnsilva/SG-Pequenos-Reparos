@@ -4,6 +4,7 @@ import com.sg.reparos.dto.NotificacaoRequestDTO;
 import com.sg.reparos.dto.ServicoRequestDTO;
 import com.sg.reparos.dto.ServicoResponseDTO;
 import com.sg.reparos.model.Notificacao;
+import com.sg.reparos.model.Problema;
 import com.sg.reparos.model.Servico;
 import com.sg.reparos.model.Servico.DiaSemana;
 import com.sg.reparos.model.Servico.Periodo;
@@ -14,6 +15,7 @@ import com.sg.reparos.repository.ServicoRepository;
 import com.sg.reparos.repository.TipoServicoRepository;
 import com.sg.reparos.repository.UsuarioRepository;
 import com.sg.reparos.repository.NotificacaoRepository;
+import com.sg.reparos.repository.ProblemaRepository;
 
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -28,6 +30,7 @@ import java.util.stream.Collectors;
 @Service
 public class ServicoService {
 
+        private final ProblemaRepository problemaRepository;
         private final ServicoRepository servicoRepository;
         private final UsuarioRepository usuarioRepository;
         private final TipoServicoRepository tipoServicoRepository;
@@ -38,12 +41,14 @@ public class ServicoService {
                         UsuarioRepository usuarioRepository,
                         TipoServicoRepository tipoServicoRepository,
                         NotificacaoService notificacaoService,
-                        NotificacaoRepository notificacaoRepository) {
+                        NotificacaoRepository notificacaoRepository,
+                        ProblemaRepository problemaRepository) {
                 this.servicoRepository = servicoRepository;
                 this.usuarioRepository = usuarioRepository;
                 this.tipoServicoRepository = tipoServicoRepository;
                 this.notificacaoService = notificacaoService;
                 this.notificacaoRepository = notificacaoRepository;
+                this.problemaRepository = problemaRepository;
         }
 
         public ServicoResponseDTO solicitarServico(ServicoRequestDTO dto) {
@@ -59,7 +64,10 @@ public class ServicoService {
 
                 TipoServico tipoServico = tipoServicoRepository.findById(dto.getTipoServicoId())
                                 .orElseThrow(() -> new RuntimeException("Tipo de serviço não encontrado"));
-
+                Problema problema = problemaRepository.findByNome(dto.getProblemaSelecionado())
+                                .orElseThrow(() -> new RuntimeException("Problema não encontrado"));
+                
+                servico.setProblema(problema);
                 servico.setCliente(cliente);
                 servico.setTipoServico(tipoServico);
                 Servico salvo = servicoRepository.save(servico);
@@ -288,7 +296,6 @@ public class ServicoService {
                 dto.setData(servico.getData());
                 dto.setHorario(servico.getHorario());
 
-            
                 dto.setDiaEspecifico(servico.getDiaEspecifico());
                 dto.setOutrosDias(servico.getOutrosDiasDisponiveis());
                 dto.setHorarioDesejado(servico.getHorarioDesejado());
