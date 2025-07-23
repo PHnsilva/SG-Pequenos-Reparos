@@ -46,17 +46,14 @@ const LandingPage = () => {
             <div className="landing-banner-card">
               <h3>🛠️ Manutenção Especializada</h3>
               <p>Serviços elétricos, hidráulicos e estruturais realizados com segurança e ferramentas adequadas.</p>
-              <button>Ver opções de manutenção</button>
             </div>
             <div className="landing-banner-card">
               <h3>🪛 Instalações Rápidas</h3>
               <p>Montagem de móveis, instalações elétricas e hidráulicas feitas com precisão e sem complicação.</p>
-              <button>Agendar instalação</button>
             </div>
             <div className="landing-banner-card">
               <h3>🧱 Reformas com Acabamento Impecável</h3>
               <p>Pintura, aplicação de revestimentos e reparos diversos com atenção aos mínimos detalhes e acabamento profissional.</p>
-              <button>Solicitar reforma</button>
             </div>
           </div>
         </div>

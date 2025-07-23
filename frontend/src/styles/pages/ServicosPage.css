@@ -1,14 +1,13 @@
-/* Container principal da página de serviços */
+/* Layout principal */
 .servicos-page-container {
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 20px;
   width: 100vw;
   height: 90vh;
   padding-top: 10vh;
   box-sizing: border-box;
   overflow: hidden;
+  background-color: #f0f4f8;
+  font-family: 'Segoe UI', sans-serif;
 }
 
 /* Calendário */
@@ -20,56 +19,130 @@
   box-sizing: border-box;
 }
 
-/* Painel direito (lista/modal) */
+/* Painel direito */
 .servicos-content {
   flex: 1;
   max-width: 50vw;
   min-width: 350px;
-  height: 90vh;
-  padding: 1rem;
-  box-sizing: border-box;
+  height: 100%;
+  padding: 2rem 1.5rem;
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
   border-left: 2px solid #ccc;
+  background-color: #fff;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.05);
 }
 
-/* Bloco da lista de serviços */
+/* Título */
+.titulo-servicos {
+  margin-bottom: 1rem;
+  font-size: 1.8rem;
+  color: #003366;
+  font-weight: bold;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.titulo-servicos::before {
+  content: "📋";
+  font-size: 1.5rem;
+}
+
+/* Abas */
+.abas-container {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid #eee;
+}
+
+.aba-button {
+  flex: 1;
+  padding: 0.75rem;
+  font-size: 1.25rem;
+  cursor: pointer;
+  background-color: #e6ecf5;
+  border: none;
+  margin: 0 0.25rem;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  font-weight: 700;
+  color: #002a55;
+  box-shadow: inset 0 -2px 0 transparent;
+}
+
+.aba-button.ativa {
+  background-color: #003366;
+  color: #fff;
+  box-shadow: inset 0 -3px 0 #ffa500;
+}
+
+.aba-button:hover {
+  background-color: #4d77c0;
+}
+
+/* Lista */
 .servicos-lista {
-    height: 70vh;
+  flex: 1;
   overflow-y: auto;
   padding-right: 10px;
-  box-sizing: border-box;
 }
 
-/* Bloco dos botões */
-.servicos-buttons {
+/* Mensagem vazia */
+.mensagem-vazia {
+  text-align: center;
+  color: #777;
+  font-style: italic;
+  margin-top: 2rem;
+}
+
+/* Cards */
+.servico-card {
+  background-color: #ffffff;
+  border: 1px solid #dde3ec;
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1rem;
   display: flex;
-  flex-direction: row;
-  align-items: stretch;
-  justify-content: center;
-  gap: 10px;
-  padding-top: 1rem;
+  gap: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  align-items: flex-start;
+  transition: transform 0.2s ease;
 }
 
-/* Esconde lista e botões quando modal está ativo */
-.servicos-content.modal-active .servicos-lista,
-.servicos-content.modal-active .servicos-buttons {
-  display: none;
+.servico-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.08);
+}
+
+.icone-servico {
+  font-size: 2rem;
+  color: #ffa500;
+}
+
+.servico-card h4 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #003366;
+}
+
+.servico-card p {
+  margin: 0.2rem 0;
+  color: #555;
 }
 
 /* Botões */
-.servicos-btn {
-  background-color: #003366;
-  color: white;
-  border: none;
-  padding: 0.75rem 2rem;
-  border-radius: 6px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.servicos-btn:hover {
-  background-color: #FFA500;
-  color: white;
+.servicos-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 10px;
+  padding-top: 1rem;
 }
