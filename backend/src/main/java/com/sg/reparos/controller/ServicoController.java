@@ -29,7 +29,8 @@ public class ServicoController {
         return ResponseEntity.ok(response);
     }
 
-    // ✅ ADMIN/CLIENTE: Listar todos os serviços (com base no perfil será filtrado no frontend)
+    // ✅ ADMIN/CLIENTE: Listar todos os serviços (com base no perfil será filtrado
+    // no frontend)
     @GetMapping
     public ResponseEntity<List<ServicoResponseDTO>> listarTodos() {
         List<ServicoResponseDTO> servicos = servicoService.listarTodos();
@@ -85,4 +86,11 @@ public class ServicoController {
         ServicoResponseDTO atualizado = servicoService.editarServico(id, dto);
         return ResponseEntity.ok(atualizado);
     }
+
+    @GetMapping("/horarios-ocupados")
+    public ResponseEntity<List<String>> buscarHorariosOcupados(@RequestParam String data) {
+        List<String> horarios = servicoService.buscarHorariosOcupados(data);
+        return ResponseEntity.ok(horarios);
+    }
+
 }
