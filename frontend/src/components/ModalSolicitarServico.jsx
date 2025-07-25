@@ -12,12 +12,11 @@ const ModalSolicitarServico = ({ onClose, onServicoCriado }) => {
   const [descricaoPersonalizada, setDescricaoPersonalizada] = useState('');
   const [tipoServicoId, setTipoServicoId] = useState('');
   const [diaEspecifico, setDiaEspecifico] = useState('');
-  const [outrosDiasSelecionados, setOutrosDiasSelecionados] = useState([]); // ['2025-06-26', ...]
+  const [outrosDiasSelecionados, setOutrosDiasSelecionados] = useState([]);
   const [horario, setHorario] = useState('');
   const [tiposServico, setTiposServico] = useState([]);
   const [cliente, setCliente] = useState(null);
 
-  // Mapeamento tipo → problemas
   const problemasPorTipo = {
     'Pintura Residencial e Predial': [
       'Tinta descascando ou manchada',
@@ -80,7 +79,6 @@ const ModalSolicitarServico = ({ onClose, onServicoCriado }) => {
     }
   };
 
-  // Gera 8 datas e irá pular a primeira
   const gerarOpcoesDeDatas = () => {
     if (!diaEspecifico) return [];
     const start = new Date(diaEspecifico);
@@ -97,7 +95,51 @@ const ModalSolicitarServico = ({ onClose, onServicoCriado }) => {
     });
   };
 
-  const dateOptionsSkipFirst = gerarOpcoesDeDatas().slice(1);
+  const [horariosOcupados, setHorariosOcupados] = useState([]);
+
+  useEffect(() => {
+    if (diaEspecifico) {
+      buscarHorariosOcupados(diaEspecifico);
+    }
+  }, [diaEspecifico]);
+
+  const buscarHorariosOcupados = async (data) => {
+    try {
+      // Substitua pelo seu endpoint real!
+      const response = await fetch(`/api/servicos/horarios-ocupados?data=${data}`);
+      const dados = await response.json();
+      setHorariosOcupados(dados); // ex: ["08:00", "10:00"]
+    } catch (error) {
+      console.error("Erro ao buscar horários ocupados:", error);
+      setHorariosOcupados([]); // fallback
+    }
+  };
+
+  const gerarHorariosDisponiveis = () => {
+    if (!diaEspecifico) return [];
+    const agora = new Date();
+    const dataSelecionada = new Date(diaEspecifico);
+    const horarios = [];
+
+    for (let i = 8; i <= 22; i++) {
+      const horario = new Date(diaEspecifico);
+      horario.setHours(i, 0, 0, 0);
+
+      const diffHoras = (horario - agora) / (1000 * 60 * 60);
+      const horaStr = `${String(i).padStart(2, '0')}:00`;
+
+      const permitido = (
+        dataSelecionada.toDateString() !== agora.toDateString() || diffHoras >= 2
+      ) && !horariosOcupados.includes(horaStr);
+
+      if (permitido) {
+        horarios.push(horaStr);
+      }
+    }
+
+    return horarios;
+  };
+
 
   const toggleOutroDia = (value) => {
     setOutrosDiasSelecionados(prev =>
@@ -109,23 +151,20 @@ const ModalSolicitarServico = ({ onClose, onServicoCriado }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const descricaoFinal = descricao === 'Outro'
-      ? descricaoPersonalizada
-      : descricao;
+    const descricaoFinal = descricao === 'Outro' ? descricaoPersonalizada : descricao;
 
     try {
       await solicitarServico({
+        problemaSelecionado: descricaoFinal,
         nome: 'Solicitação de Serviço',
         descricao: descricaoFinal,
-        tipoServicoId,
+        tipoServicoId: Number(tipoServicoId),
         clienteId: cliente.id,
         emailContato: cliente.email,
         telefoneContato: cliente.telefone,
-        diasDisponiveisCliente: {
-          diaEspecifico,
-          outrosDias: outrosDiasSelecionados
-        },
-        horario
+        diaEspecifico: diaEspecifico,
+        outrosDias: outrosDiasSelecionados,
+        horario: horario
       });
       alert('Serviço solicitado com sucesso!');
       onServicoCriado();
@@ -135,11 +174,13 @@ const ModalSolicitarServico = ({ onClose, onServicoCriado }) => {
     }
   };
 
-  // Descobre os problemas para o tipo selecionado
+
   const tipoSelecionado = tiposServico.find(t => t.id === Number(tipoServicoId));
   const problemas = tipoSelecionado
     ? problemasPorTipo[tipoSelecionado.nome] || []
     : [];
+
+  const dateOptionsSkipFirst = gerarOpcoesDeDatas().slice(1);
 
   return (
     <div className="modal-solicitar-overlay">
@@ -181,14 +222,26 @@ const ModalSolicitarServico = ({ onClose, onServicoCriado }) => {
                 ))}
                 <option value="Outro">Outro</option>
               </select>
+              {descricao === 'Outro' && (
+                <>
+                  <label>Descreva o problema:</label>
+                  <input
+                    type="text"
+                    value={descricaoPersonalizada}
+                    onChange={e => setDescricaoPersonalizada(e.target.value)}
+                    required
+                  />
+                </>
+              )}
             </>
           )}
 
-          {/* Dia específico */}
-          <label>Data específica:</label>
+          {/* Data específica */}
+          <label>Data:</label>
           <input
             type="date"
             value={diaEspecifico}
+            min={new Date().toISOString().split("T")[0]}
             onChange={e => {
               setDiaEspecifico(e.target.value);
               setOutrosDiasSelecionados([]);
@@ -196,7 +249,7 @@ const ModalSolicitarServico = ({ onClose, onServicoCriado }) => {
             required
           />
 
-          {/* Outros dias */}
+          {/* Outros dias disponíveis */}
           {diaEspecifico && (
             <>
               <label>Outros dias disponíveis:</label>
@@ -224,12 +277,20 @@ const ModalSolicitarServico = ({ onClose, onServicoCriado }) => {
             required
           >
             <option value="">Selecione o horário</option>
-            {Array.from({ length: 11 }, (_, i) => {
-              const hour = 8 + i;
-              const h = `${String(hour).padStart(2, '0')}:00`;
-              return <option key={h} value={h}>{h}</option>;
-            })}
+
+            {gerarHorariosDisponiveis().length === 0 ? (
+              <option value="" disabled>
+                Nenhum horário disponível para este dia
+              </option>
+            ) : (
+              gerarHorariosDisponiveis().map(h => (
+                <option key={h} value={h}>
+                  {h}
+                </option>
+              ))
+            )}
           </select>
+
 
           {/* Ações */}
           <div className="modal-solicitar-actions">
@@ -241,7 +302,6 @@ const ModalSolicitarServico = ({ onClose, onServicoCriado }) => {
             </Button>
           </div>
 
-          {/* Observação */}
           <p className="modal-solicitar-note">
             📱 *Observação: mais detalhes adicionais serão discutidos via WhatsApp.*
           </p>
