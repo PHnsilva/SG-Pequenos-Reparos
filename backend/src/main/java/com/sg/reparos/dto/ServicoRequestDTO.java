@@ -89,6 +89,13 @@ public class ServicoRequestDTO {
     public void setEmailContato(String emailContato) {
         this.emailContato = emailContato;
     }
+     public LocalDate getDiaEspecifico() {
+        return diaEspecifico;
+    }
+
+    public void setDiaEspecifico(LocalDate diaEspecifico) {
+        this.diaEspecifico = diaEspecifico;
+    }
 
     public String getTelefoneContato() {
         return telefoneContato;
