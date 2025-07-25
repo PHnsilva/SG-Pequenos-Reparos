@@ -66,7 +66,7 @@ public class ServicoService {
                                 .orElseThrow(() -> new RuntimeException("Tipo de serviço não encontrado"));
                 Problema problema = problemaRepository.findByNome(dto.getProblemaSelecionado())
                                 .orElseThrow(() -> new RuntimeException("Problema não encontrado"));
-                
+
                 servico.setProblema(problema);
                 servico.setCliente(cliente);
                 servico.setTipoServico(tipoServico);
@@ -323,4 +323,14 @@ public class ServicoService {
                         case NOITE -> horario.isAfter(LocalTime.of(17, 59)) && horario.isBefore(LocalTime.of(23, 59));
                 };
         }
+
+        public List<String> buscarHorariosOcupados(String dataStr) {
+                LocalDate data = LocalDate.parse(dataStr);
+                List<Servico> servicos = servicoRepository.findByDataAndStatus(data, Servico.StatusServico.ACEITO);
+
+                return servicos.stream()
+                                .map(s -> s.getHorario().toString().substring(0, 5)) // "HH:mm"
+                                .collect(Collectors.toList());
+        }
+
 }

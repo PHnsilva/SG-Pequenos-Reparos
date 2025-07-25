@@ -43,7 +43,7 @@ public class Servico {
 
     @Column(nullable = false)
     private String telefoneContato;
-    @Column(nullable = true)
+    @Column(nullable = false)
     private LocalDate diaEspecifico;
 
     @ElementCollection
