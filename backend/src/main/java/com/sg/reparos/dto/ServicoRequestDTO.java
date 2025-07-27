@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 public class ServicoRequestDTO {
 
     @NotBlank(message = "O problema selecionado é obrigatório.")
@@ -30,9 +32,10 @@ public class ServicoRequestDTO {
     private String telefoneContato;
 
     @NotNull(message = "A data específica é obrigatória.")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate diaEspecifico;
 
-    private List<LocalDate> outrosDias; // opcionais
+    private List<LocalDate> outrosDias; 
 
     @NotNull(message = "O horário desejado é obrigatório.")
     private LocalTime horario;

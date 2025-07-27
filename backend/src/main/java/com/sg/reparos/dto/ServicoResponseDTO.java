@@ -18,7 +18,6 @@ public class ServicoResponseDTO {
     private String telefoneContato;
     private LocalDate diaEspecifico;
     private List<LocalDate> outrosDias;
-    private LocalTime horarioDesejado;
     private String status;
     private String administradorNome;
     private LocalDate data;
@@ -39,10 +38,8 @@ public class ServicoResponseDTO {
         this.telefoneContato = servico.getTelefoneContato();
         this.diaEspecifico = servico.getDiaEspecifico();
         this.outrosDias = servico.getOutrosDiasDisponiveis();
-        this.horarioDesejado = servico.getHorarioDesejado();
         this.status = servico.getStatus().name();
         this.administradorNome = servico.getAdministrador() != null ? servico.getAdministrador().getNome() : null;
-        this.data = servico.getData();
         this.horario = servico.getHorario();
     }
 
@@ -158,14 +155,6 @@ public class ServicoResponseDTO {
 
     public void setOutrosDias(List<LocalDate> outrosDias) {
         this.outrosDias = outrosDias;
-    }
-
-    public LocalTime getHorarioDesejado() {
-        return horarioDesejado;
-    }
-
-    public void setHorarioDesejado(LocalTime horarioDesejado) {
-        this.horarioDesejado = horarioDesejado;
     }
 
 }

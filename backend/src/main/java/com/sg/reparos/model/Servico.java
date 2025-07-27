@@ -51,22 +51,6 @@ public class Servico {
     @Column(name = "data")
     private List<LocalDate> outrosDiasDisponiveis;
 
-    @Column(nullable = false)
-    private LocalTime horarioDesejado;
-
-    // Disponibilidade informada pelo cliente
-    @ElementCollection
-    @Enumerated(EnumType.STRING)
-    @CollectionTable(name = "servico_dias_disponiveis", joinColumns = @JoinColumn(name = "servico_id"))
-    @Column(name = "dia_semana")
-    private List<DiaSemana> diasDisponiveisCliente;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Periodo periodoDisponivelCliente;
-
-    private LocalDate data; // Data agendada (preenchida pelo admin)
-
     private LocalTime horario; // Horário agendado (preenchido pelo admin)
 
     @Enumerated(EnumType.STRING)
@@ -82,16 +66,6 @@ public class Servico {
         RECUSADO,
         CANCELADO,
         CONCLUIDO
-    }
-
-    // Enum para o dia da semana
-    public enum DiaSemana {
-        SEGUNDA, TERCA, QUARTA, QUINTA, SEXTA, SABADO, DOMINGO
-    }
-
-    // Enum para o período do dia
-    public enum Periodo {
-        MANHA, TARDE, NOITE
     }
 
     @OneToOne(mappedBy = "servico", cascade = CascadeType.ALL)
@@ -161,30 +135,6 @@ public class Servico {
         this.telefoneContato = telefoneContato;
     }
 
-    public List<DiaSemana> getDiasDisponiveisCliente() {
-        return diasDisponiveisCliente;
-    }
-
-    public void setDiasDisponiveisCliente(List<DiaSemana> diasDisponiveisCliente) {
-        this.diasDisponiveisCliente = diasDisponiveisCliente;
-    }
-
-    public Periodo getPeriodoDisponivelCliente() {
-        return periodoDisponivelCliente;
-    }
-
-    public void setPeriodoDisponivelCliente(Periodo periodoDisponivelCliente) {
-        this.periodoDisponivelCliente = periodoDisponivelCliente;
-    }
-
-    public LocalDate getData() {
-        return data;
-    }
-
-    public void setData(LocalDate data) {
-        this.data = data;
-    }
-
     public LocalTime getHorario() {
         return horario;
     }
@@ -223,14 +173,6 @@ public class Servico {
 
     public void setOutrosDiasDisponiveis(List<LocalDate> outrosDiasDisponiveis) {
         this.outrosDiasDisponiveis = outrosDiasDisponiveis;
-    }
-
-    public LocalTime getHorarioDesejado() {
-        return horarioDesejado;
-    }
-
-    public void setHorarioDesejado(LocalTime horarioDesejado) {
-        this.horarioDesejado = horarioDesejado;
     }
     public Problema getProblema() {
         return problema;

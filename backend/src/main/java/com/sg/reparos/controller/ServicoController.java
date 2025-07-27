@@ -93,4 +93,10 @@ public class ServicoController {
         return ResponseEntity.ok(horarios);
     }
 
+    @GetMapping("/horario-indisponivel")
+public ResponseEntity<Boolean> verificarHorario(@RequestParam String data, @RequestParam String horario) {
+    boolean indisponivel = servicoService.isHorarioIndisponivel(data, horario);
+    return ResponseEntity.ok(indisponivel);
+}
+
 }
