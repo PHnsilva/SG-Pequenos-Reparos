@@ -1,81 +1,140 @@
-/* Layout principal */
-.servicos-page-container {
-  display: flex;
-  width: 100vw;
-  height: 90vh;
-  padding-top: 10vh;
+/* === RESET GERAL === */
+* {
   box-sizing: border-box;
-  overflow: hidden;
-  background-color: #f0f4f8;
+  margin: 0;
+  padding: 0;
+}
+body {
   font-family: 'Segoe UI', sans-serif;
+  background-color: #f0f4f8;
 }
 
-/* Calendário */
-.servicos-calendar {
-  flex: 1;
-  max-width: 50vw;
-  overflow-y: auto;
-  padding: 1rem;
-  box-sizing: border-box;
+/* === WRAPPER PRINCIPAL === */
+.servicos-page-wrapper {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
 }
 
-/* Painel direito */
-.servicos-content {
-  flex: 1;
-  max-width: 50vw;
-  min-width: 350px;
-  height: 100%;
-  padding: 2rem 1.5rem;
+/* === SIDEBAR === */
+.sidebar {
+  width: 60px;
+  background-color: #003366;
   display: flex;
   flex-direction: column;
-  box-sizing: border-box;
-  border-left: 2px solid #ccc;
+  padding-top: 10vh;
+  transition: width 0.3s ease;
+  overflow: hidden;
+  z-index: 10;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.sidebar:hover {
+  width: 300px;
+}
+
+.sidebar-item {
+  color: white;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.sidebar-item:hover {
+  background-color: #005599;
+}
+
+.sidebar .icon {
+  font-size: 1.5rem;
+  margin-right: 10px;
+}
+
+.sidebar .label {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  white-space: nowrap;
+  font-weight: bold;
+}
+
+.sidebar:hover .label {
+  opacity: 1;
+}
+
+/* === CONTEÚDO GERAL À DIREITA DA SIDEBAR === */
+.servicos-page-container {
+  flex: 1;
+  margin-left: 60px;
+  padding-top: 10vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* === TELA EXPANDIDA (CALENDÁRIO / HISTÓRICO) === */
+.tela-expandida {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
   background-color: #fff;
+}
+
+/* === CONTEÚDO DAS SOLICITAÇÕES === */
+.servicos-content {
+  flex: 1;
+  background-color: #fff;
+  padding: 2rem 2rem 1rem 2rem;
+  display: flex;
+  flex-direction: column;
   border-top-left-radius: 20px;
   border-bottom-left-radius: 20px;
   box-shadow: -2px 0 10px rgba(0, 0, 0, 0.05);
+  height: calc(100vh - 10vh);
+  overflow: hidden;
 }
 
-/* Título */
+/* === TÍTULO === */
 .titulo-servicos {
-  margin-bottom: 1rem;
   font-size: 1.8rem;
   color: #003366;
   font-weight: bold;
-  text-align: center;
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
   gap: 0.5rem;
 }
-
 .titulo-servicos::before {
   content: "📋";
   font-size: 1.5rem;
 }
 
-/* Abas */
+/* === ABAS === */
 .abas-container {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
+  gap: 0.5rem;
   margin-bottom: 1rem;
   border-bottom: 2px solid #eee;
 }
 
 .aba-button {
   flex: 1;
-  padding: 0.75rem;
-  font-size: 1.25rem;
+  padding: 0.75rem 1rem;
+  font-size: 1.1rem;
   cursor: pointer;
   background-color: #e6ecf5;
   border: none;
-  margin: 0 0.25rem;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  font-weight: 700;
+  border-radius: 10px 10px 0 0;
+  font-weight: bold;
   color: #002a55;
-  box-shadow: inset 0 -2px 0 transparent;
+  transition: background-color 0.3s, box-shadow 0.3s;
+  text-align: center;
 }
 
 .aba-button.ativa {
@@ -86,16 +145,17 @@
 
 .aba-button:hover {
   background-color: #4d77c0;
+  color: #fff;
 }
 
-/* Lista */
+/* === LISTA DE SERVIÇOS === */
 .servicos-lista {
   flex: 1;
   overflow-y: auto;
   padding-right: 10px;
 }
 
-/* Mensagem vazia */
+/* === MENSAGEM DE VAZIO === */
 .mensagem-vazia {
   text-align: center;
   color: #777;
@@ -103,17 +163,17 @@
   margin-top: 2rem;
 }
 
-/* Cards */
+/* === CARDS DE SERVIÇO === */
 .servico-card {
-  background-color: #ffffff;
+  background-color: #fff;
   border: 1px solid #dde3ec;
   border-radius: 12px;
   padding: 1rem;
   margin-bottom: 1rem;
   display: flex;
+  align-items: flex-start;
   gap: 1rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  align-items: flex-start;
   transition: transform 0.2s ease;
 }
 
@@ -138,11 +198,22 @@
   color: #555;
 }
 
-/* Botões */
+/* === BOTÕES === */
 .servicos-buttons {
   display: flex;
-  flex-direction: row;
   justify-content: center;
   gap: 10px;
   padding-top: 1rem;
+}
+
+/* === CALENDÁRIO CENTRAL === */
+.servicos-calendar {
+  max-height: 600px;
+  overflow-y: auto;
+  padding: 1rem;
+  background-color: white;
+  margin: 0 auto;
+  width: 90%;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
