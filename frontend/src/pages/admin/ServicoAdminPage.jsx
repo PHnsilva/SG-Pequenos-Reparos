@@ -33,8 +33,6 @@ const ServicoAdminPage = () => {
 
   const toggleView = (target) => {
     setViewMode((prev) => (prev === target ? "servicos" : target));
-  const toggleView = (target) => {
-    setViewMode((prev) => (prev === target ? "servicos" : target));
   };
 
   const servicosFiltrados = servicos.filter(s => s.status === statusSelecionado);
@@ -57,23 +55,6 @@ const ServicoAdminPage = () => {
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className="servicos-page-container">
-        {viewMode === "calendario" && (
-          <div className="tela-expandida">
-            <CalendarioServicosAdmin servicos={servicos} />
-          </div>
-        )}
-
-        {viewMode === "historico" && (
-          <div className="tela-expandida">
-            <HistoricoServicosAdmin servicos={servicos} />
-          </div>
-        )}
-
-        {viewMode === "servicos" && (
-          <div className="servicos-content">
-            <h2 className="titulo-servicos">Gerenciamento de Serviços</h2>
       {/* Main Content */}
       <div className="servicos-page-container">
         {viewMode === "calendario" && (
@@ -119,13 +100,6 @@ const ServicoAdminPage = () => {
               )}
             </div>
 
-            <div className="servicos-buttons">
-              <Button variant="contratar" onClick={fetchServicos}>
-                Atualizar
-              </Button>
-            </div>
-          </div>
-        )}
             <div className="servicos-buttons">
               <Button variant="contratar" onClick={fetchServicos}>
                 Atualizar
