@@ -8,11 +8,17 @@ const CardServico = ({ servico, tipo }) => {
     <div className="card-servico">
       <h4>{servico.nome}</h4>
       <p>Status: {servico.status}</p>
-      {servico.data && (
-        <p>Data agendada: {formatarData(servico.data)}</p>
+
+      {/* usa diaEspecifico em vez de data */}
+      {servico.diaEspecifico && (
+        <p>Data agendada: {formatarData(servico.diaEspecifico)}</p>
       )}
-      {tipo === 'agendado' && (
-        <p><strong>Agendado para:</strong> {formatarData(servico.data)} às {servico.horario}</p>
+
+      {tipo === "agendado" && servico.diaEspecifico && servico.horario && (
+        <p>
+          <strong>Agendado para:</strong>{" "}
+          {formatarData(servico.diaEspecifico)} às {servico.horario}
+        </p>
       )}
     </div>
   );

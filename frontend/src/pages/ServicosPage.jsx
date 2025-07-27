@@ -37,11 +37,12 @@ const ServicosPage = () => {
   const filtrarServicosPorStatus = () => {
     switch (abaSelecionada) {
       case "Solicitados":
-        return servicos.filter(s => s.status === "solicitado");
+        return servicos.filter(s => s.status === "SOLICITADO");
       case "Agendados":
-        return servicos.filter(s => s.status === "agendado");
+        // se você considera "ACEITO" como agendado
+        return servicos.filter(s => s.status === "ACEITO");
       case "Concluídos":
-        return servicos.filter(s => s.status === "concluido");
+        return servicos.filter(s => s.status === "CONCLUIDO");
       default:
         return [];
     }
@@ -84,7 +85,7 @@ const ServicosPage = () => {
               <div key={servico.id} className="servico-card">
                 <div className="icone-servico">🛠️</div>
                 <div>
-                  <h4>{servico.titulo}</h4>
+                  <h4>{servico.nome}</h4>
                   <p>Status: {servico.status}</p>
                   <p>{servico.descricao}</p>
                 </div>

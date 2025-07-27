@@ -1,14 +1,13 @@
 import { useState, useEffect } from "react";
-import { Calendar, momentLocalizer } from "react-big-calendar";// importa locale pt-br
-import "react-big-calendar/lib/css/react-big-calendar.css"; // pode remover se quiser usar só o CSS customizado
+import { Calendar, momentLocalizer } from "react-big-calendar";
+import "react-big-calendar/lib/css/react-big-calendar.css";
 import ModalDetalhesServico from "./ModalDetalhesServico";
 import "../styles/components/CalendarioServicos.css";
 import { getUserProfile } from "../services/authService";
 import moment from "moment-timezone";
-import "moment/locale/pt-br"; 
+import "moment/locale/pt-br";
 
 moment.locale("pt-br");
-
 const localizer = momentLocalizer(moment);
 
 const statusInfo = {
@@ -24,7 +23,6 @@ const CustomEvent = ({ event }) => {
     icon: "📄",
     label: "OUT",
   };
-
   return (
     <div
       className="calendario-evento"
@@ -64,56 +62,55 @@ const CalendarioServicos = ({ servicos }) => {
   const [meusServicos, setMeusServicos] = useState([]);
 
   useEffect(() => {
-    const filtrarServicos = async () => {
+    (async () => {
       try {
         const user = await getUserProfile();
-        const apenasMeus = servicos.filter(s => s.clienteId === user.id);
-        setMeusServicos(apenasMeus);
+        setMeusServicos(servicos.filter(s => s.clienteId === user.id));
       } catch (err) {
         console.error("Erro ao carregar serviços do cliente:", err);
       }
-    };
-
-    filtrarServicos();
+    })();
   }, [servicos]);
 
   const eventos = meusServicos
     .filter(
-      (servico) =>
-        servico.data &&
-        servico.horario &&
-        (servico.status === "ACEITO" || servico.status === "CONCLUIDO")
+      s =>
+        s.diaEspecifico &&
+        s.horario &&
+        (s.status === "ACEITO" || s.status === "CONCLUIDO")
     )
-    .map((servico) => {
-      const start = new Date(`${servico.data}T${servico.horario}`);
+    .map(s => {
+      // monta start e end a partir de diaEspecifico + horário
+      const [year, month, day] = s.diaEspecifico.split("-");
+      const [hour, minute] = s.horario.split(":");
+      const start = new Date(year, month - 1, day, hour, minute);
       const end = new Date(start.getTime() + 60 * 60 * 1000);
 
       return {
-        id: servico.id,
-        title: servico.nome,
+        id: s.id,
+        title: s.nome,
         start,
         end,
-        status: servico.status,
-        ...servico,
+        status: s.status,
+        // passa todo o objeto para o modal
+        servico: s,
       };
     });
 
   return (
-    <div>
+    <div className="calendario-container">
       <Calendar
         localizer={localizer}
         events={eventos}
         startAccessor="start"
         endAccessor="end"
         style={{ height: 600 }}
-        components={{
-          event: CustomEvent,
-        }}
+        components={{ event: CustomEvent }}
         view={view}
         onView={setView}
         date={date}
         onNavigate={setDate}
-        onSelectEvent={(event) => setServicoSelecionado(event)}
+        onSelectEvent={evt => setServicoSelecionado(evt.servico)}
         messages={{
           date: "Data",
           time: "Horário",
