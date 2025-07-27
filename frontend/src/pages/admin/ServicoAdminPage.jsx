@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { listarServicos } from "../../services/servicoService";
 import CalendarioServicosAdmin from "../../components/admin/CalendarioServicosAdmin";
+import HistoricoServicosAdmin from "../../pages/HistoricoServicosPage";
 import ListaServicosAdmin from "../../components/admin/ListaServicosAdmin";
 import Button from "../../components/Button";
 import "../../styles/pages/ServicosPage.css";
@@ -30,8 +31,8 @@ const ServicoAdminPage = () => {
     }
   };
 
-  const handleServicoAtualizado = () => {
-    fetchServicos();
+  const toggleView = (target) => {
+    setViewMode((prev) => (prev === target ? "servicos" : target));
   };
 
   const servicosFiltrados = servicos.filter(s => s.status === statusSelecionado);
@@ -54,10 +55,23 @@ const ServicoAdminPage = () => {
         </div>
       </div>
 
-      {/* Painel Admin */}
-      <div className="servicos-content">
-        {/* Título */}
-        <h2 className="titulo-servicos">Gerenciamento de Serviços</h2>
+      {/* Main Content */}
+      <div className="servicos-page-container">
+        {viewMode === "calendario" && (
+          <div className="tela-expandida">
+            <CalendarioServicosAdmin servicos={servicos} />
+          </div>
+        )}
+
+        {viewMode === "historico" && (
+          <div className="tela-expandida">
+            <HistoricoServicosAdmin servicos={servicos} />
+          </div>
+        )}
+
+        {viewMode === "servicos" && (
+          <div className="servicos-content">
+            <h2 className="titulo-servicos">Gerenciamento de Serviços</h2>
 
             {/* Abas de Status */}
             <div className="abas-container">
@@ -86,15 +100,13 @@ const ServicoAdminPage = () => {
               )}
             </div>
 
-        {/* Botões */}
-        <div className="servicos-buttons">
-          <Link
-            to="/cliente/historico"
-            className="btn-component btn-link-button"
-          >
-            Histórico de Serviços
-          </Link>
-        </div>
+            <div className="servicos-buttons">
+              <Button variant="contratar" onClick={fetchServicos}>
+                Atualizar
+              </Button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
