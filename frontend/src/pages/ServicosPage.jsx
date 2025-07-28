@@ -6,6 +6,7 @@ import { listarServicos } from "../services/servicoService";
 import Button from "../components/Button";
 import "../styles/pages/ServicosPage.css";
 import HistoricoServicosPage from "./HistoricoServicosPage"; // ou o caminho correto
+import MeusAgendamentosCliente from "../pages/MeusAgendamentosCliente";
 
 
 const TABS = ["Solicitados", "Agendados", "Concluídos"];
@@ -42,29 +43,39 @@ const ServicosPage = () => {
     }
   };
   const toggleView = (target) => {
-  setViewMode((prev) => (prev === target ? "servicos" : target));
-};
+    setViewMode((prev) => (prev === target ? "servicos" : target));
+  };
 
   return (
     <div className="servicos-page-wrapper">
       {/* Sidebar */}
       <div className="sidebar">
+        <div className="sidebar-item" onClick={() => toggleView("agendamentos")}>
+          <span className="icon">📅</span>
+          <span className="label">Meus Agendamentos</span>
+        </div>
         <div className="sidebar-item" onClick={() => toggleView("calendario")}>
-  <span className="icon">📅</span>
-  <span className="label">Exibir Calendário</span>
-</div>
-<div className="sidebar-item" onClick={() => toggleView("historico")}>
-  <span className="icon">🕘</span>
-  <span className="label">Exibir Histórico</span>
-</div>
+          <span className="icon">📅</span>
+          <span className="label">Exibir Calendário</span>
+        </div>
         <div className="sidebar-item" onClick={() => toggleView("servicos")}>
           <span className="icon">📋</span>
           <span className="label">Exibir Serviços</span>
+        </div>
+        <div className="sidebar-item" onClick={() => toggleView("historico")}>
+          <span className="icon">🕘</span>
+          <span className="label">Exibir Histórico</span>
         </div>
       </div>
 
       {/* Conteúdo à direita */}
       <div className="servicos-page-container">
+        {viewMode === "agendamentos" && (
+          <div className="tela-expandida">
+            <MeusAgendamentosCliente servicos={servicos} />
+          </div>
+        )}
+
         {viewMode === "calendario" && (
           <div className="tela-expandida">
             <CalendarioServicos servicos={servicos} />

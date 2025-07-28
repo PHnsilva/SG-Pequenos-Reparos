@@ -5,6 +5,7 @@ import HistoricoServicosAdmin from "../../pages/HistoricoServicosPage";
 import ListaServicosAdmin from "../../components/admin/ListaServicosAdmin";
 import Button from "../../components/Button";
 import "../../styles/pages/ServicosPage.css";
+import MeusAgendamentosAdmin from "../../pages/admin/MeusAgendamentosAdmin";
 
 const STATUS_ABAS = [
   { codigo: "SOLICITADO", label: "Solicitados", icon: "📝" },
@@ -41,6 +42,14 @@ const ServicoAdminPage = () => {
     <div className="servicos-page-wrapper">
       {/* Sidebar */}
       <div className="sidebar">
+        <div className="sidebar-item" onClick={() => toggleView("agendamentos")}>
+          <span className="icon">📅</span>
+          <span className="label">Meus Agendamentos</span>
+        </div>
+        <div className="sidebar-item" onClick={() => toggleView("servicos")}>
+          <span className="icon">📋</span>
+          <span className="label">Serviços</span>
+        </div>
         <div className="sidebar-item" onClick={() => toggleView("calendario")}>
           <span className="icon">📅</span>
           <span className="label">Calendário</span>
@@ -49,14 +58,16 @@ const ServicoAdminPage = () => {
           <span className="icon">🕘</span>
           <span className="label">Histórico</span>
         </div>
-        <div className="sidebar-item" onClick={() => toggleView("servicos")}>
-          <span className="icon">📋</span>
-          <span className="label">Serviços</span>
-        </div>
       </div>
 
       {/* Main Content */}
       <div className="servicos-page-container">
+        {viewMode === "agendamentos" && (
+          <div className="tela-expandida">
+            <MeusAgendamentosAdmin servicos={servicos} />
+          </div>
+        )}
+
         {viewMode === "calendario" && (
           <div className="tela-expandida">
             <CalendarioServicosAdmin servicos={servicos} />
