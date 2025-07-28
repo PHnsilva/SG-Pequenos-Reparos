@@ -1,0 +1,44 @@
+.agendamentos-container {
+  padding: 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+  background-color: #f9fbff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.agendamentos-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.agendamentos-header h2 {
+  font-size: 1.8rem;
+  color: #1f3c88;
+}
+
+.agendamentos-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.card-agendamento {
+  background-color: white;
+  padding: 1rem 1.5rem;
+  border-left: 6px solid #1f3c88;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.card-agendamento strong {
+  color: #333;
+}
+
+.filtro-data {
+  padding: 0.4rem 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
