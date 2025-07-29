@@ -54,10 +54,9 @@ public class ServicoService {
         servico.setEmailContato(dto.getEmailContato());
         servico.setTelefoneContato(dto.getTelefoneContato());
         servico.setStatus(StatusServico.SOLICITADO);
-
-        // disponibilidade do cliente
         servico.setDiaEspecifico(dto.getDiaEspecifico());
         servico.setOutrosDiasDisponiveis(dto.getOutrosDias());
+        servico.setHorario(dto.getHorario());
 
         // problema selecionado
         servico.setProblemaSelecionado(dto.getProblemaSelecionado());
