@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import Input from '../components/Input';
 import Button from '../components/Button';
@@ -19,6 +18,7 @@ const CadastroPage = () => {
     senha: ''
   });
 
+  const [confirmarSenha, setConfirmarSenha] = useState('');
   const [verificationCode, setVerificationCode] = useState('');
   const [codeSent, setCodeSent] = useState(false);
   const [error, setError] = useState('');
@@ -44,12 +44,16 @@ const CadastroPage = () => {
     e.preventDefault();
     setError('');
 
-      // Validação da senha no frontend
-  if (formData.senha.length < 6) {
-    setError('A senha deve ter no mínimo 6 caracteres');
-    return;  // interrompe o envio do formulário
-  }
-  
+    if (formData.senha.length < 6) {
+      setError('A senha deve ter no mínimo 6 caracteres');
+      return;
+    }
+
+    if (formData.senha !== confirmarSenha) {
+      setError('As senhas não coincidem');
+      return;
+    }
+
     if (!codeSent) {
       sendSmsCode();
       return;
@@ -77,7 +81,8 @@ const CadastroPage = () => {
           <Input label="Telefone (+55...)" name="telefone" value={formData.telefone} onChange={handleChange} required />
           <Input label="Nome de Usuário" name="username" value={formData.username} onChange={handleChange} required />
           <Input label="Senha" name="senha" value={formData.senha} onChange={handleChange} required type="password" />
-          
+          <Input label="Confirmar Senha" name="confirmarSenha" value={confirmarSenha} onChange={(e) => setConfirmarSenha(e.target.value)} required type="password" />
+
           {codeSent && (
             <Input
               label="Código de Verificação"
