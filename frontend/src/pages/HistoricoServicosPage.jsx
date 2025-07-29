@@ -11,7 +11,6 @@ import Button from "../components/Button";
 
 const HistoricoServicosPage = () => {
   const [servicos, setServicos] = useState([]);
-  const [filtroStatus, setFiltroStatus] = useState("");
   const [filtroTipo, setFiltroTipo] = useState("");
   const [filtroNome, setFiltroNome] = useState("");
   const [filtroData, setFiltroData] = useState("");
@@ -30,7 +29,8 @@ const HistoricoServicosPage = () => {
         listarServicos(),
         getUserProfile(),
       ]);
-      setServicos(servicoRes.data);
+      const concluidos = servicoRes.data.filter(s => s.status === "CONCLUIDO");
+      setServicos(concluidos);
       setUsuario(usuarioRes);
     } catch (error) {
       console.error("Erro ao buscar dados:", error);
@@ -41,7 +41,6 @@ const HistoricoServicosPage = () => {
     const nomeMatch = servico.nome
       .toLowerCase()
       .includes(filtroNome.toLowerCase());
-    const statusMatch = filtroStatus ? servico.status === filtroStatus : true;
     const tipoMatch = filtroTipo
       ? typeof servico.tipoServico === "string"
         ? servico.tipoServico === filtroTipo
@@ -51,7 +50,7 @@ const HistoricoServicosPage = () => {
       ? servico.data?.includes?.(filtroData) ||
         new Date(servico.data).toLocaleDateString().includes(filtroData)
       : true;
-    return nomeMatch && statusMatch && tipoMatch && dataMatch;
+    return nomeMatch && tipoMatch && dataMatch;
   });
 
   const tiposUnicos = Array.from(
@@ -85,7 +84,7 @@ const HistoricoServicosPage = () => {
 
   return (
     <div className="historico-page">
-      <h2 className="historico-titulo">Histórico de Serviços</h2>
+      <h2 className="historico-titulo">Histórico de Serviços Concluídos</h2>
       <div className="box-listagem-historico">
         {/* Filtros */}
         <div className="historico-filtros">
@@ -105,18 +104,6 @@ const HistoricoServicosPage = () => {
           />
           <select
             className="filtro"
-            value={filtroStatus}
-            onChange={(e) => setFiltroStatus(e.target.value)}
-          >
-            <option value="">Todos os Status</option>
-            <option value="SOLICITADO">Solicitado</option>
-            <option value="ACEITO">Agendado</option>
-            <option value="CONCLUIDO">Concluído</option>
-            <option value="RECUSADO">Recusado</option>
-            <option value="CANCELADO">Cancelado</option>
-          </select>
-          <select
-          className="filtro"
             value={filtroTipo}
             onChange={(e) => setFiltroTipo(e.target.value)}
           >
@@ -132,7 +119,7 @@ const HistoricoServicosPage = () => {
         {/* Lista de Serviços */}
         {servicosFiltrados.length === 0 ? (
           <p className="historico-vazio">
-            Nenhum serviço encontrado com os filtros aplicados.
+            Nenhum serviço concluído encontrado com os filtros aplicados.
           </p>
         ) : (
           <ul className="historico-lista">
@@ -176,15 +163,14 @@ const HistoricoServicosPage = () => {
                       Editar
                     </Button>
                   )}
-                  {usuario?.tipo === "CLIENTE" &&
-                    servico.status === "CONCLUIDO" && (
-                      <Button
-                        variant="avaliar"
-                        onClick={() => handleAvaliar(servico)}
-                      >
-                        Avaliar
-                      </Button>
-                    )}
+                  {usuario?.tipo === "CLIENTE" && (
+                    <Button
+                      variant="avaliar"
+                      onClick={() => handleAvaliar(servico)}
+                    >
+                      Avaliar
+                    </Button>
+                  )}
                 </div>
               </li>
             ))}
