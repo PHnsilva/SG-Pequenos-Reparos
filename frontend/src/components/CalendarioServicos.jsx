@@ -10,51 +10,6 @@ import "moment/locale/pt-br";
 moment.locale("pt-br");
 const localizer = momentLocalizer(moment);
 
-const statusInfo = {
-  ACEITO: { color: "#2ecc71", icon: "✅", label: "ACE" },
-  CONCLUIDO: { color: "#27ae60", icon: "🏁", label: "CON" },
-  CANCELADO: { color: "#e74c3c", icon: "❌", label: "CAN" },
-  RECUSADO: { color: "#c0392b", icon: "🚫", label: "REC" },
-};
-
-const CustomEvent = ({ event }) => {
-  const info = statusInfo[event.status] || {
-    color: "#7f8c8d",
-    icon: "📄",
-    label: "OUT",
-  };
-  return (
-    <div
-      className="calendario-evento"
-      style={{ backgroundColor: info.color, borderLeft: `5px solid ${info.color}` }}
-      title={`${event.title} [${info.label}]`}
-    >
-      <span>{info.icon}</span>
-      <span>
-        {event.title} <strong>[{info.label}]</strong>
-      </span>
-    </div>
-  );
-};
-
-const LegendaStatus = () => (
-  <div className="legenda-status">
-    <h4>Legenda de Status</h4>
-    <div className="legenda-lista">
-      {Object.entries(statusInfo).map(([status, info]) => (
-        <div
-          key={status}
-          className="legenda-item"
-          style={{ backgroundColor: info.color }}
-        >
-          <span>{info.icon}</span>
-          <strong>[{info.label}]</strong> {status}
-        </div>
-      ))}
-    </div>
-  </div>
-);
-
 const CalendarioServicos = ({ servicos }) => {
   const [servicoSelecionado, setServicoSelecionado] = useState(null);
   const [view, setView] = useState("month");
@@ -65,37 +20,29 @@ const CalendarioServicos = ({ servicos }) => {
     (async () => {
       try {
         const user = await getUserProfile();
-        setMeusServicos(servicos.filter(s => s.clienteId === user.id));
+        const filtrados = servicos.filter(
+          (s) => s.clienteId === user.id && s.status === "ACEITO" && s.diaEspecifico && s.horario
+        );
+        setMeusServicos(
+          filtrados.sort((a, b) => {
+            const da = new Date(`${a.diaEspecifico}T${a.horario}`);
+            const db = new Date(`${b.diaEspecifico}T${b.horario}`);
+            return da - db;
+          })
+        );
       } catch (err) {
         console.error("Erro ao carregar serviços do cliente:", err);
       }
     })();
   }, [servicos]);
 
-  const eventos = meusServicos
-    .filter(
-      s =>
-        s.diaEspecifico &&
-        s.horario &&
-        (s.status === "ACEITO" || s.status === "CONCLUIDO")
-    )
-    .map(s => {
-      // monta start e end a partir de diaEspecifico + horário
-      const [year, month, day] = s.diaEspecifico.split("-");
-      const [hour, minute] = s.horario.split(":");
-      const start = new Date(year, month - 1, day, hour, minute);
-      const end = new Date(start.getTime() + 60 * 60 * 1000);
-
-      return {
-        id: s.id,
-        title: s.nome,
-        start,
-        end,
-        status: s.status,
-        // passa todo o objeto para o modal
-        servico: s,
-      };
-    });
+  const eventos = meusServicos.map((s) => {
+    const [year, month, day] = s.diaEspecifico.split("-");
+    const [hour, minute] = s.horario.split(":");
+    const start = new Date(year, month - 1, day, hour, minute);
+    const end = new Date(start.getTime() + 60 * 60 * 1000);
+    return { id: s.id, title: s.nome, start, end, servico: s };
+  });
 
   return (
     <div className="calendario-container">
@@ -105,33 +52,29 @@ const CalendarioServicos = ({ servicos }) => {
         startAccessor="start"
         endAccessor="end"
         style={{ height: 600 }}
-        components={{ event: CustomEvent }}
         view={view}
         onView={setView}
-        date={date}
         onNavigate={setDate}
-        onSelectEvent={evt => setServicoSelecionado(evt.servico)}
-        messages={{
-          date: "Data",
-          time: "Horário",
-          event: "Serviço",
-          allDay: "Dia inteiro",
-          week: "Semana",
-          work_week: "Dias úteis",
-          day: "Dia",
-          month: "Mês",
-          previous: "Anterior",
-          next: "Próximo",
-          yesterday: "Ontem",
-          tomorrow: "Amanhã",
-          today: "Hoje",
-          agenda: "Agenda",
-          noEventsInRange: "Nenhum serviço neste período.",
-          showMore: total => `+ ver mais (${total})`,
-        }}
+        date={date}
+        onSelectEvent={(evt) => setServicoSelecionado(evt.servico)}
+        views={{ month: true, agenda: true }}
+        // Mantém toolbar para permitir trocar entre mês e agenda
       />
 
-      <LegendaStatus />
+      {/* Lista de cards dos serviços agendados */}
+      <div className="lista-agendados">
+        {meusServicos.length === 0 ? (
+          <p className="mensagem-vazia">Nenhum serviço agendado.</p>
+        ) : (
+          meusServicos.map((s) => (
+            <div key={s.id} className="card-agendado">
+              <h4>{s.nome}</h4>
+              <p><strong>Data:</strong> {s.diaEspecifico} às {s.horario}</p>
+              <button onClick={() => setServicoSelecionado(s)}>Detalhes</button>
+            </div>
+          ))
+        )}
+      </div>
 
       {servicoSelecionado && (
         <ModalDetalhesServico
