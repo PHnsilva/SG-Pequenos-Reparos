@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Button from "../components/Button";
 import ModalDetalhesServico from "../components/ModalDetalhesServico";
 import { listarServicos } from "../services/servicoService";
-import "../styles/pages/MeusAgendamentosCliente.css";
+import "../styles/pages/MeusAgendamentos.css";
 
 const MeusAgendamentosCliente = () => {
   const [servicos, setServicos] = useState([]);

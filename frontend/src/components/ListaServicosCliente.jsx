@@ -4,7 +4,7 @@ import { getUserProfile } from "../services/authService";
 import CardServico from "./CardServico";
 import ModalAvaliacaoServico from "./ModalAvaliacaoServico";
 import Button from "./Button";
-import "../styles/components/ListaServicosCliente.css";
+import "../styles/components/ListaServicos.css";
 import { toast } from "react-toastify";
 import ModalCancelarServico from "./ModalCancelarServico";
 

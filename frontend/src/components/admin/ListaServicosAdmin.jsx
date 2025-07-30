@@ -10,7 +10,8 @@ import {
   concluirServico,
 } from "../../services/servicoService";
 import { toast } from "react-toastify";
-import "../../styles/components/ListaServicosCliente.css";
+import "../../styles/components/ListaServicos.css";
+import { CheckCircle } from "lucide-react";
 
 const ListaServicosAdmin = ({ servicos, onServicoAtualizado }) => {
   const [servicoAtual, setServicoAtual] = useState(null);
@@ -20,10 +21,17 @@ const ListaServicosAdmin = ({ servicos, onServicoAtualizado }) => {
   const [mostrarModalConcluir, setMostrarModalConcluir] = useState(false);
   const [cancelando, setCancelando] = useState(false);
   const [concluindo, setConcluindo] = useState(false);
+  const [verificados, setVerificados] = useState([]);
 
   const abrirModal = (modalSetter, servico) => {
     setServicoAtual(servico);
     modalSetter(true);
+  };
+
+  const toggleVerificado = (id) => {
+    setVerificados((prev) =>
+      prev.includes(id) ? prev.filter((v) => v !== id) : [...prev, id]
+    );
   };
 
   const confirmarCancelamento = async (motivo) => {
@@ -58,7 +66,6 @@ const ListaServicosAdmin = ({ servicos, onServicoAtualizado }) => {
     const { status } = servico;
     const acoes = [];
 
-    // Detalhes sempre visível
     acoes.push(
       <Button key="detalhes" variant="detalhes" onClick={() => abrirModal(setMostrarModalDetalhes, servico)}>
         Detalhes
@@ -92,14 +99,22 @@ const ListaServicosAdmin = ({ servicos, onServicoAtualizado }) => {
 
   return (
     <div className="lista-servicos-container">
-      {servicos.map((servico) => (
-        <div key={servico.id} className="lista-servicos-card">
-          <CardServico servico={servico} tipo={servico.status.toLowerCase()} />
-          {renderAcoes(servico)}
-        </div>
-      ))}
+      {servicos.map((servico) => {
+        const verificado = verificados.includes(servico.id);
+        return (
+          <div
+            key={servico.id}
+            className={`lista-servicos-card ${verificado ? "verificado" : ""}`}
+          >
+            <div className="verificar-icone" onClick={() => toggleVerificado(servico.id)}>
+              <CheckCircle size={24} color={verificado ? "#2ecc71" : "#ccc"} />
+            </div>
+            <CardServico servico={servico} tipo={servico.status.toLowerCase()} />
+            {renderAcoes(servico)}
+          </div>
+        );
+      })}
 
-      {/* Modais */}
       {mostrarModalDetalhes && servicoAtual && (
         <ModalDetalhesServico servico={servicoAtual} onClose={() => setMostrarModalDetalhes(false)} />
       )}

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import ModalDetalhesServico from "../../components/ModalDetalhesServico";
 import Button from "../../components/Button";
-import "../../styles/pages/MeusAgendamentosCliente.css";
+import "../../styles/pages/MeusAgendamentos.css";
 
 const MeusAgendamentosAdmin = ({ servicos = [] }) => {
   const [filtroData, setFiltroData] = useState("");
