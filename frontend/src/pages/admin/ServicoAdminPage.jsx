@@ -4,25 +4,22 @@ import CalendarioServicosAdmin from "../../components/admin/CalendarioServicosAd
 import HistoricoServicosAdmin from "../../pages/HistoricoServicosPage";
 import ListaServicosAdmin from "../../components/admin/ListaServicosAdmin";
 import Button from "../../components/Button";
-import "../../styles/pages/ServicosPage.css";
 import MeusAgendamentosAdmin from "../../pages/admin/MeusAgendamentosAdmin";
+import ModalLixeira from "../../components/ModalLixeira"; // modal overlay
+import "../../styles/pages/ServicosPage.css";
 
 const STATUS_ABAS = [
   { codigo: "SOLICITADO", label: "Solicitados", icon: "📝" },
-  { codigo: "ACEITO", label: "Agendados", icon: "📅" },
   { codigo: "CONCLUIDO", label: "Concluídos", icon: "✅" },
-  { codigo: "CANCELADO", label: "Cancelados", icon: "❌" },
 ];
 
 const ServicoAdminPage = () => {
   const [servicos, setServicos] = useState([]);
-  const [viewMode, setViewMode] = useState("servicos"); // 'servicos' | 'calendario' | 'historico'
+  const [viewMode, setViewMode] = useState("servicos"); // 'servicos' | 'calendario' | 'historico' | 'agendamentos'
   const [statusSelecionado, setStatusSelecionado] = useState("SOLICITADO");
+  const [showLixeira, setShowLixeira] = useState(false);
 
-  useEffect(() => {
-    fetchServicos();
-  }, []);
-
+  // Busca serviços
   const fetchServicos = async () => {
     try {
       const response = await listarServicos();
@@ -32,31 +29,43 @@ const ServicoAdminPage = () => {
     }
   };
 
+  // Alterna views
   const toggleView = (target) => {
+    setShowLixeira(false);
     setViewMode((prev) => (prev === target ? "servicos" : target));
   };
 
-  const servicosFiltrados = servicos.filter(s => s.status === statusSelecionado);
+  useEffect(() => {
+    fetchServicos();
+  }, []);
+
+  // Filtragem
+  const servicosFiltrados = servicos.filter((s) => s.status === statusSelecionado);
+  const servicosCancelados = servicos.filter((s) => s.status === "CANCELADO");
 
   return (
     <div className="servicos-page-wrapper">
       {/* Sidebar */}
       <div className="sidebar">
-        <div className="sidebar-item" onClick={() => toggleView("agendamentos")}>
+        <div className="sidebar-item" onClick={() => toggleView("agendamentos")}>  
           <span className="icon">📅</span>
           <span className="label">Meus Agendamentos</span>
         </div>
-        <div className="sidebar-item" onClick={() => toggleView("servicos")}>
+        <div className="sidebar-item" onClick={() => toggleView("servicos")}>  
           <span className="icon">📋</span>
           <span className="label">Serviços</span>
         </div>
-        <div className="sidebar-item" onClick={() => toggleView("calendario")}>
-          <span className="icon">📅</span>
+        <div className="sidebar-item" onClick={() => toggleView("calendario")}>  
+          <span className="icon">🗓️</span>
           <span className="label">Calendário</span>
         </div>
-        <div className="sidebar-item" onClick={() => toggleView("historico")}>
-          <span className="icon">🕘</span>
+        <div className="sidebar-item" onClick={() => toggleView("historico")}>  
+          <span className="icon">📜</span>
           <span className="label">Histórico</span>
+        </div>
+        <div className="sidebar-item" onClick={() => setShowLixeira(true)}>  
+          <span className="icon">🗑️</span>
+          <span className="label">Lixeira</span>
         </div>
       </div>
 
@@ -84,7 +93,7 @@ const ServicoAdminPage = () => {
           <div className="servicos-content">
             <h2 className="titulo-servicos">Gerenciamento de Serviços</h2>
 
-            {/* Abas de Status */}
+            {/* Abas de Status: somente Solicitações e Concluídos */}
             <div className="abas-container">
               {STATUS_ABAS.map(({ codigo, label, icon }) => (
                 <button
@@ -110,13 +119,16 @@ const ServicoAdminPage = () => {
                 />
               )}
             </div>
-
-            <div className="servicos-buttons">
-              <Button variant="contratar" onClick={fetchServicos}>
-                Atualizar
-              </Button>
-            </div>
           </div>
+        )}
+
+        {/* Modal Lixeira como overlay */}
+        {showLixeira && (
+          <ModalLixeira
+            onClose={() => setShowLixeira(false)}
+            servicosCancelados={servicosCancelados}
+            servicosExcluidos={[]}
+          />
         )}
       </div>
     </div>
