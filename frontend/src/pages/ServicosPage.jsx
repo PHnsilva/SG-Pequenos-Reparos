@@ -1,23 +1,22 @@
-// ServicosPage.jsx
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import CalendarioServicos from "../components/CalendarioServicos";
 import ModalSolicitarServico from "../components/ModalSolicitarServico";
 import ModalLixeira from "../components/ModalLixeira";
 import { listarServicos } from "../services/servicoService";
 import Button from "../components/Button";
-import "../styles/pages/ServicosPage.css";
 import MeusAgendamentosCliente from "../pages/MeusAgendamentosCliente";
+import HistoricoServicosPage from "../pages/HistoricoServicosPage";
+import "../styles/pages/ServicosPage.css";
 
-const TABS = ["Solicitados", "Agendados", "Concluídos"];
+const TABS = ["Solicitados", "Concluídos"];
 
 const ServicosPage = () => {
   const [servicos, setServicos] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [abaSelecionada, setAbaSelecionada] = useState("Solicitados");
-  const [viewMode, setViewMode] = useState("servicos");
+  const [viewMode, setViewMode] = useState("servicos"); // 'servicos' | 'calendario' | 'historico' | 'agendamentos'
   const [servicosExcluidos, setServicosExcluidos] = useState([]);
-  const [modalLixeiraOpen, setModalLixeiraOpen] = useState(false);
+  const [showLixeira, setShowLixeira] = useState(false);
 
   useEffect(() => {
     fetchServicos();
@@ -33,6 +32,7 @@ const ServicosPage = () => {
   };
 
   const toggleView = (target) => {
+    setShowLixeira(false);
     setViewMode((prev) => (prev === target ? "servicos" : target));
   };
 
@@ -45,8 +45,6 @@ const ServicosPage = () => {
     switch (abaSelecionada) {
       case "Solicitados":
         return servicos.filter((s) => s.status === "SOLICITADO");
-      case "Agendados":
-        return servicos.filter((s) => s.status === "ACEITO");
       case "Concluídos":
         return servicos.filter((s) => s.status === "CONCLUIDO");
       default:
@@ -58,23 +56,53 @@ const ServicosPage = () => {
     <div className="servicos-page-wrapper">
       {/* Sidebar */}
       <div className="sidebar">
-        <div className="sidebar-item" onClick={() => toggleView("agendamentos")}>📅 Meus Agendamentos</div>
-        <div className="sidebar-item" onClick={() => toggleView("calendario")}>📅 Exibir Calendário</div>
-        <div className="sidebar-item" onClick={() => toggleView("servicos")}>📋 Exibir Serviços</div>
-        <div className="sidebar-item" onClick={() => toggleView("historico")}>🕘 Exibir Histórico</div>
-        <div className="sidebar-item" onClick={() => setModalLixeiraOpen(true)}>🗑️ Lixeira</div>
+        <div className="sidebar-item" onClick={() => toggleView("agendamentos")}>  
+          <span className="icon">📅</span>
+          <span className="label">Meus Agendamentos</span>
+        </div>
+        <div className="sidebar-item" onClick={() => toggleView("servicos")}>  
+          <span className="icon">📋</span>
+          <span className="label">Serviços</span>
+        </div>
+        <div className="sidebar-item" onClick={() => toggleView("calendario")}>  
+          <span className="icon">🗓️</span>
+          <span className="label">Calendário</span>
+        </div>
+        <div className="sidebar-item" onClick={() => toggleView("historico")}>  
+          <span className="icon">📜</span>
+          <span className="label">Histórico</span>
+        </div>
+        <div className="sidebar-item" onClick={() => setShowLixeira(true)}>  
+          <span className="icon">🗑️</span>
+          <span className="label">Lixeira</span>
+        </div>
       </div>
 
-      {/* Conteúdo */}
+      {/* Main Content */}
       <div className="servicos-page-container">
-        {viewMode === "agendamentos" && <MeusAgendamentosCliente servicos={servicos} />}
-        {viewMode === "calendario" && <CalendarioServicos servicos={servicos} />}
-        {viewMode === "historico" && <div>Histórico</div>}
+        {viewMode === "agendamentos" && (
+          <div className="tela-expandida">
+            <MeusAgendamentosCliente servicos={servicos} />
+          </div>
+        )}
+
+        {viewMode === "calendario" && (
+          <div className="tela-expandida">
+            <CalendarioServicos servicos={servicos} />
+          </div>
+        )}
+
+        {viewMode === "historico" && (
+          <div className="tela-expandida">
+            <HistoricoServicosPage servicos={servicos} />
+          </div>
+        )}
 
         {viewMode === "servicos" && (
           <div className="servicos-content">
             <h2 className="titulo-servicos">Minhas Solicitações</h2>
 
+            {/* Abas */}
             <div className="abas-container">
               {TABS.map((tab) => (
                 <button
@@ -87,6 +115,7 @@ const ServicosPage = () => {
               ))}
             </div>
 
+            {/* Lista */}
             <div className="servicos-lista">
               {filtrarServicosPorStatus().length === 0 ? (
                 <p className="mensagem-vazia">Nenhum serviço nesta aba.</p>
@@ -127,9 +156,9 @@ const ServicosPage = () => {
               />
             )}
 
-            {modalLixeiraOpen && (
+            {showLixeira && (
               <ModalLixeira
-                onClose={() => setModalLixeiraOpen(false)}
+                onClose={() => setShowLixeira(false)}
                 servicosCancelados={servicos.filter((s) => s.status === "CANCELADO")}
                 servicosExcluidos={servicosExcluidos}
               />
