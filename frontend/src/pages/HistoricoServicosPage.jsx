@@ -119,7 +119,7 @@ const HistoricoServicosPage = () => {
         {/* Lista de Serviços */}
         {servicosFiltrados.length === 0 ? (
           <p className="historico-vazio">
-            Nenhum serviço concluído encontrado com os filtros aplicados.
+            Nenhum serviço concluído encontrado.
           </p>
         ) : (
           <ul className="historico-lista">

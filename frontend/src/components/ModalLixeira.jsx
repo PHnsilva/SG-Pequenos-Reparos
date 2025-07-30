@@ -1,11 +1,17 @@
 // ModalLixeira.jsx
-import { useState } from "react";
+import React, { useState } from "react";
 import "../styles/components/ModalLixeira.css";
 
-const ModalLixeira = ({ onClose, servicosCancelados, servicosExcluidos }) => {
+const ModalLixeira = ({
+  onClose,
+  servicosCancelados = [],    // valores padrão
+  servicosExcluidos = []
+}) => {
   const [aba, setAba] = useState("excluidos"); // "excluidos" ou "cancelados"
 
-  const servicosAtivos = aba === "cancelados" ? servicosCancelados : servicosExcluidos;
+  // escolhe o array correto, sempre um array
+  const servicosAtivos =
+    aba === "cancelados" ? servicosCancelados : servicosExcluidos;
 
   return (
     <div className="modal-lixeira-overlay">
@@ -36,11 +42,9 @@ const ModalLixeira = ({ onClose, servicosCancelados, servicosExcluidos }) => {
           ) : (
             servicosAtivos.map((servico) => (
               <div key={servico.id} className="card-lixeira">
-                <div>
-                  <h4>{servico.nome}</h4>
-                  <p><strong>Status:</strong> {servico.status}</p>
-                  <p>{servico.descricao}</p>
-                </div>
+                <h4>{servico.nome}</h4>
+                <p><strong>Status:</strong> {servico.status}</p>
+                <p>{servico.descricao}</p>
               </div>
             ))
           )}
