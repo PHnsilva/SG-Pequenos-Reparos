@@ -6,6 +6,8 @@ import { listarServicos } from "../services/servicoService";
 import Button from "../components/Button";
 import MeusAgendamentosCliente from "../pages/MeusAgendamentosCliente";
 import HistoricoServicosPage from "../pages/HistoricoServicosPage";
+import ModalAvisoZAP from "../components/ModalAvisoZAP";
+import CardServico from "../components/CardServico";
 import "../styles/pages/ServicosPage.css";
 
 const TABS = ["Solicitados", "Concluídos"];
@@ -14,9 +16,10 @@ const ServicosPage = () => {
   const [servicos, setServicos] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [abaSelecionada, setAbaSelecionada] = useState("Solicitados");
-  const [viewMode, setViewMode] = useState("servicos"); // 'servicos' | 'calendario' | 'historico' | 'agendamentos'
+  const [viewMode, setViewMode] = useState("servicos");
   const [servicosExcluidos, setServicosExcluidos] = useState([]);
   const [showLixeira, setShowLixeira] = useState(false);
+  const [mostrarAvisoZap, setMostrarAvisoZap] = useState(false);
 
   useEffect(() => {
     fetchServicos();
@@ -54,31 +57,29 @@ const ServicosPage = () => {
 
   return (
     <div className="servicos-page-wrapper">
-      {/* Sidebar */}
       <div className="sidebar">
-        <div className="sidebar-item" onClick={() => toggleView("agendamentos")}>  
+        <div className="sidebar-item" onClick={() => toggleView("agendamentos")}>
           <span className="icon">📅</span>
           <span className="label">Meus Agendamentos</span>
         </div>
-        <div className="sidebar-item" onClick={() => toggleView("servicos")}>  
+        <div className="sidebar-item" onClick={() => toggleView("servicos")}>
           <span className="icon">📋</span>
           <span className="label">Serviços</span>
         </div>
-        <div className="sidebar-item" onClick={() => toggleView("calendario")}>  
+        <div className="sidebar-item" onClick={() => toggleView("calendario")}>
           <span className="icon">🗓️</span>
           <span className="label">Calendário</span>
         </div>
-        <div className="sidebar-item" onClick={() => toggleView("historico")}>  
+        <div className="sidebar-item" onClick={() => toggleView("historico")}>
           <span className="icon">📜</span>
           <span className="label">Histórico</span>
         </div>
-        <div className="sidebar-item" onClick={() => setShowLixeira(true)}>  
+        <div className="sidebar-item" onClick={() => setShowLixeira(true)}>
           <span className="icon">🗑️</span>
           <span className="label">Lixeira</span>
         </div>
       </div>
 
-      {/* Main Content */}
       <div className="servicos-page-container">
         {viewMode === "agendamentos" && (
           <div className="tela-expandida">
@@ -102,7 +103,6 @@ const ServicosPage = () => {
           <div className="servicos-content">
             <h2 className="titulo-servicos">Minhas Solicitações</h2>
 
-            {/* Abas */}
             <div className="abas-container">
               {TABS.map((tab) => (
                 <button
@@ -115,19 +115,13 @@ const ServicosPage = () => {
               ))}
             </div>
 
-            {/* Lista */}
             <div className="servicos-lista">
               {filtrarServicosPorStatus().length === 0 ? (
                 <p className="mensagem-vazia">Nenhum serviço nesta aba.</p>
               ) : (
                 filtrarServicosPorStatus().map((servico) => (
                   <div key={servico.id} className="servico-card">
-                    <div className="icone-servico">🛠️</div>
-                    <div style={{ flex: 1 }}>
-                      <h4>{servico.nome}</h4>
-                      <p>Status: {servico.status}</p>
-                      <p>{servico.descricao}</p>
-                    </div>
+                    <CardServico servico={servico} tipo={abaSelecionada.toLowerCase()} />
                     <button
                       className="btn-excluir"
                       title="Excluir"
@@ -152,8 +146,13 @@ const ServicosPage = () => {
                 onServicoCriado={() => {
                   fetchServicos();
                   setIsModalOpen(false);
+                  setMostrarAvisoZap(true);
                 }}
               />
+            )}
+
+            {mostrarAvisoZap && (
+              <ModalAvisoZAP onClose={() => setMostrarAvisoZap(false)} />
             )}
 
             {showLixeira && (
