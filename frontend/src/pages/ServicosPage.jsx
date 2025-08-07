@@ -14,7 +14,7 @@ const ServicosPage = () => {
   const [servicos, setServicos] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [abaSelecionada, setAbaSelecionada] = useState("Solicitados");
-  const [viewMode, setViewMode] = useState("servicos"); // 'servicos' | 'calendario' | 'historico' | 'agendamentos'
+  const [viewMode, setViewMode] = useState("servicos");
   const [servicosExcluidos, setServicosExcluidos] = useState([]);
   const [showLixeira, setShowLixeira] = useState(false);
 
@@ -32,7 +32,7 @@ const ServicosPage = () => {
   };
 
   const toggleView = (target) => {
-    setShowLixeira(false);
+    setShowLixeira(false);  // fecha lixeira ao trocar de view
     setViewMode((prev) => (prev === target ? "servicos" : target));
   };
 
@@ -42,131 +42,130 @@ const ServicosPage = () => {
   };
 
   const filtrarServicosPorStatus = () => {
-    switch (abaSelecionada) {
-      case "Solicitados":
-        return servicos.filter((s) => s.status === "SOLICITADO");
-      case "Concluídos":
-        return servicos.filter((s) => s.status === "CONCLUIDO");
-      default:
-        return [];
+    if (abaSelecionada === "Solicitados") {
+      return servicos.filter((s) => s.status === "SOLICITADO");
     }
+    return servicos.filter((s) => s.status === "CONCLUIDO");
   };
 
   return (
-    <div className="servicos-page-wrapper">
-      {/* Sidebar */}
-      <div className="sidebar">
-        <div className="sidebar-item" onClick={() => toggleView("agendamentos")}>  
-          <span className="icon">📅</span>
-          <span className="label">Meus Agendamentos</span>
-        </div>
-        <div className="sidebar-item" onClick={() => toggleView("servicos")}>  
-          <span className="icon">📋</span>
-          <span className="label">Serviços</span>
-        </div>
-        <div className="sidebar-item" onClick={() => toggleView("calendario")}>  
-          <span className="icon">🗓️</span>
-          <span className="label">Calendário</span>
-        </div>
-        <div className="sidebar-item" onClick={() => toggleView("historico")}>  
-          <span className="icon">📜</span>
-          <span className="label">Histórico</span>
-        </div>
-        <div className="sidebar-item" onClick={() => setShowLixeira(true)}>  
-          <span className="icon">🗑️</span>
-          <span className="label">Lixeira</span>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="servicos-page-container">
-        {viewMode === "agendamentos" && (
-          <div className="tela-expandida">
-            <MeusAgendamentosCliente servicos={servicos} />
+    <>
+      <div className="servicos-page-wrapper">
+        {/* Sidebar */}
+        <div className="sidebar">
+          <div className="sidebar-item" onClick={() => toggleView("agendamentos")}>  
+            <span className="icon">📅</span>
+            <span className="label">Meus Agendamentos</span>
           </div>
-        )}
-
-        {viewMode === "calendario" && (
-          <div className="tela-expandida">
-            <CalendarioServicos servicos={servicos} />
+          <div className="sidebar-item" onClick={() => toggleView("servicos")}>  
+            <span className="icon">📋</span>
+            <span className="label">Serviços</span>
           </div>
-        )}
-
-        {viewMode === "historico" && (
-          <div className="tela-expandida">
-            <HistoricoServicosPage servicos={servicos} />
+          <div className="sidebar-item" onClick={() => toggleView("calendario")}>  
+            <span className="icon">🗓️</span>
+            <span className="label">Calendário</span>
           </div>
-        )}
+          <div className="sidebar-item" onClick={() => toggleView("historico")}>  
+            <span className="icon">📜</span>
+            <span className="label">Histórico</span>
+          </div>
+          <div className="sidebar-item" onClick={() => setShowLixeira(true)}>  
+            <span className="icon">🗑️</span>
+            <span className="label">Lixeira</span>
+          </div>
+        </div>
 
-        {viewMode === "servicos" && (
-          <div className="servicos-content">
-            <h2 className="titulo-servicos">Minhas Solicitações</h2>
-
-            {/* Abas */}
-            <div className="abas-container">
-              {TABS.map((tab) => (
-                <button
-                  key={tab}
-                  className={`aba-button ${abaSelecionada === tab ? "ativa" : ""}`}
-                  onClick={() => setAbaSelecionada(tab)}
-                >
-                  {tab}
-                </button>
-              ))}
+        {/* Main Content */}
+        <div className="servicos-page-container">
+          {viewMode === "agendamentos" && (
+            <div className="tela-expandida">
+              <MeusAgendamentosCliente servicos={servicos} />
             </div>
+          )}
 
-            {/* Lista */}
-            <div className="servicos-lista">
-              {filtrarServicosPorStatus().length === 0 ? (
-                <p className="mensagem-vazia">Nenhum serviço nesta aba.</p>
-              ) : (
-                filtrarServicosPorStatus().map((servico) => (
-                  <div key={servico.id} className="servico-card">
-                    <div className="icone-servico">🛠️</div>
-                    <div style={{ flex: 1 }}>
-                      <h4>{servico.nome}</h4>
-                      <p>Status: {servico.status}</p>
-                      <p>{servico.descricao}</p>
+          {viewMode === "calendario" && (
+            <div className="tela-expandida">
+              <CalendarioServicos servicos={servicos} />
+            </div>
+          )}
+
+          {viewMode === "historico" && (
+            <div className="tela-expandida">
+              <HistoricoServicosPage servicos={servicos} />
+            </div>
+          )}
+
+          {viewMode === "servicos" && (
+            <div className="servicos-content">
+              <h2 className="titulo-servicos">Minhas Solicitações</h2>
+
+              {/* Abas */}
+              <div className="abas-container">
+                {TABS.map((tab) => (
+                  <button
+                    key={tab}
+                    className={`aba-button ${abaSelecionada === tab ? "ativa" : ""}`}
+                    onClick={() => setAbaSelecionada(tab)}
+                  >
+                    {tab}
+                  </button>
+                ))}
+              </div>
+
+              {/* Lista */}
+              <div className="servicos-lista">
+                {filtrarServicosPorStatus().length === 0 ? (
+                  <p className="mensagem-vazia">Nenhum serviço nesta aba.</p>
+                ) : (
+                  filtrarServicosPorStatus().map((servico) => (
+                    <div key={servico.id} className="servico-card">
+                      <div className="icone-servico">🛠️</div>
+                      <div style={{ flex: 1 }}>
+                        <h4>{servico.nome}</h4>
+                        <p>Status: {servico.status}</p>
+                        <p>{servico.descricao}</p>
+                      </div>
+                      <button
+                        className="btn-excluir"
+                        title="Excluir"
+                        onClick={() => handleExcluirServico(servico)}
+                      >
+                        🗑️
+                      </button>
                     </div>
-                    <button
-                      className="btn-excluir"
-                      title="Excluir"
-                      onClick={() => handleExcluirServico(servico)}
-                    >
-                      🗑️
-                    </button>
-                  </div>
-                ))
+                  ))
+                )}
+              </div>
+
+              <div className="servicos-buttons">
+                <Button variant="contratar" onClick={() => setIsModalOpen(true)}>
+                  Solicitar Novo Serviço
+                </Button>
+              </div>
+
+              {isModalOpen && (
+                <ModalSolicitarServico
+                  onClose={() => setIsModalOpen(false)}
+                  onServicoCriado={() => {
+                    fetchServicos();
+                    setIsModalOpen(false);
+                  }}
+                />
               )}
             </div>
-
-            <div className="servicos-buttons">
-              <Button variant="contratar" onClick={() => setIsModalOpen(true)}>
-                Solicitar Novo Serviço
-              </Button>
-            </div>
-
-            {isModalOpen && (
-              <ModalSolicitarServico
-                onClose={() => setIsModalOpen(false)}
-                onServicoCriado={() => {
-                  fetchServicos();
-                  setIsModalOpen(false);
-                }}
-              />
-            )}
-
-            {showLixeira && (
-              <ModalLixeira
-                onClose={() => setShowLixeira(false)}
-                servicosCancelados={servicos.filter((s) => s.status === "CANCELADO")}
-                servicosExcluidos={servicosExcluidos}
-              />
-            )}
-          </div>
-        )}
+          )}
+        </div>
       </div>
-    </div>
+
+      {/* ModalLixeira fora de qualquer condição de viewMode */}
+      {showLixeira && (
+        <ModalLixeira
+          onClose={() => setShowLixeira(false)}
+          servicosCancelados={servicos.filter((s) => s.status === "CANCELADO")}
+          servicosExcluidos={servicosExcluidos}
+        />
+      )}
+    </>
   );
 };
 
