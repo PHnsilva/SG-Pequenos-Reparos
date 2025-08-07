@@ -1,21 +1,22 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import CalendarioServicos from "../components/CalendarioServicos";
 import ModalSolicitarServico from "../components/ModalSolicitarServico";
+import ModalLixeira from "../components/ModalLixeira";
 import { listarServicos } from "../services/servicoService";
 import Button from "../components/Button";
-import "../styles/pages/ServicosPage.css";
-import HistoricoServicosPage from "./HistoricoServicosPage"; // ou o caminho correto
 import MeusAgendamentosCliente from "../pages/MeusAgendamentosCliente";
+import HistoricoServicosPage from "../pages/HistoricoServicosPage";
+import "../styles/pages/ServicosPage.css";
 
-
-const TABS = ["Solicitados", "Agendados", "Concluídos"];
+const TABS = ["Solicitados", "Concluídos"];
 
 const ServicosPage = () => {
   const [servicos, setServicos] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [abaSelecionada, setAbaSelecionada] = useState("Solicitados");
-  const [viewMode, setViewMode] = useState("servicos"); // novo: "servicos" | "calendario" | "historico"
+  const [viewMode, setViewMode] = useState("servicos"); // 'servicos' | 'calendario' | 'historico' | 'agendamentos'
+  const [servicosExcluidos, setServicosExcluidos] = useState([]);
+  const [showLixeira, setShowLixeira] = useState(false);
 
   useEffect(() => {
     fetchServicos();
@@ -30,45 +31,54 @@ const ServicosPage = () => {
     }
   };
 
+  const toggleView = (target) => {
+    setShowLixeira(false);
+    setViewMode((prev) => (prev === target ? "servicos" : target));
+  };
+
+  const handleExcluirServico = (servico) => {
+    setServicosExcluidos((prev) => [...prev, servico]);
+    setServicos((prev) => prev.filter((s) => s.id !== servico.id));
+  };
+
   const filtrarServicosPorStatus = () => {
     switch (abaSelecionada) {
       case "Solicitados":
-        return servicos.filter(s => s.status === "SOLICITADO");
-      case "Agendados":
-        return servicos.filter(s => s.status === "ACEITO");
+        return servicos.filter((s) => s.status === "SOLICITADO");
       case "Concluídos":
-        return servicos.filter(s => s.status === "CONCLUIDO");
+        return servicos.filter((s) => s.status === "CONCLUIDO");
       default:
         return [];
     }
-  };
-  const toggleView = (target) => {
-    setViewMode((prev) => (prev === target ? "servicos" : target));
   };
 
   return (
     <div className="servicos-page-wrapper">
       {/* Sidebar */}
       <div className="sidebar">
-        <div className="sidebar-item" onClick={() => toggleView("agendamentos")}>
+        <div className="sidebar-item" onClick={() => toggleView("agendamentos")}>  
           <span className="icon">📅</span>
           <span className="label">Meus Agendamentos</span>
         </div>
-        <div className="sidebar-item" onClick={() => toggleView("calendario")}>
-          <span className="icon">📅</span>
-          <span className="label">Exibir Calendário</span>
-        </div>
-        <div className="sidebar-item" onClick={() => toggleView("servicos")}>
+        <div className="sidebar-item" onClick={() => toggleView("servicos")}>  
           <span className="icon">📋</span>
-          <span className="label">Exibir Serviços</span>
+          <span className="label">Serviços</span>
         </div>
-        <div className="sidebar-item" onClick={() => toggleView("historico")}>
-          <span className="icon">🕘</span>
-          <span className="label">Exibir Histórico</span>
+        <div className="sidebar-item" onClick={() => toggleView("calendario")}>  
+          <span className="icon">🗓️</span>
+          <span className="label">Calendário</span>
+        </div>
+        <div className="sidebar-item" onClick={() => toggleView("historico")}>  
+          <span className="icon">📜</span>
+          <span className="label">Histórico</span>
+        </div>
+        <div className="sidebar-item" onClick={() => setShowLixeira(true)}>  
+          <span className="icon">🗑️</span>
+          <span className="label">Lixeira</span>
         </div>
       </div>
 
-      {/* Conteúdo à direita */}
+      {/* Main Content */}
       <div className="servicos-page-container">
         {viewMode === "agendamentos" && (
           <div className="tela-expandida">
@@ -92,8 +102,9 @@ const ServicosPage = () => {
           <div className="servicos-content">
             <h2 className="titulo-servicos">Minhas Solicitações</h2>
 
+            {/* Abas */}
             <div className="abas-container">
-              {TABS.map(tab => (
+              {TABS.map((tab) => (
                 <button
                   key={tab}
                   className={`aba-button ${abaSelecionada === tab ? "ativa" : ""}`}
@@ -104,22 +115,26 @@ const ServicosPage = () => {
               ))}
             </div>
 
+            {/* Lista */}
             <div className="servicos-lista">
               {filtrarServicosPorStatus().length === 0 ? (
-                <p className="mensagem-vazia">
-                  {abaSelecionada === "Solicitados" && "Você não tem serviços solicitados."}
-                  {abaSelecionada === "Agendados" && "Você não tem serviços agendados."}
-                  {abaSelecionada === "Concluídos" && "Você ainda não tem serviços concluídos."}
-                </p>
+                <p className="mensagem-vazia">Nenhum serviço nesta aba.</p>
               ) : (
-                filtrarServicosPorStatus().map(servico => (
+                filtrarServicosPorStatus().map((servico) => (
                   <div key={servico.id} className="servico-card">
                     <div className="icone-servico">🛠️</div>
-                    <div>
+                    <div style={{ flex: 1 }}>
                       <h4>{servico.nome}</h4>
                       <p>Status: {servico.status}</p>
                       <p>{servico.descricao}</p>
                     </div>
+                    <button
+                      className="btn-excluir"
+                      title="Excluir"
+                      onClick={() => handleExcluirServico(servico)}
+                    >
+                      🗑️
+                    </button>
                   </div>
                 ))
               )}
@@ -138,6 +153,14 @@ const ServicosPage = () => {
                   fetchServicos();
                   setIsModalOpen(false);
                 }}
+              />
+            )}
+
+            {showLixeira && (
+              <ModalLixeira
+                onClose={() => setShowLixeira(false)}
+                servicosCancelados={servicos.filter((s) => s.status === "CANCELADO")}
+                servicosExcluidos={servicosExcluidos}
               />
             )}
           </div>
