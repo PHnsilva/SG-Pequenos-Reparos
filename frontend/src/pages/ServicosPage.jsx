@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import CalendarioServicos from "../components/CalendarioServicos";
 import ModalSolicitarServico from "../components/ModalSolicitarServico";
 import ModalLixeira from "../components/ModalLixeira";
 import { listarServicos } from "../services/servicoService";
@@ -53,44 +52,34 @@ const ServicosPage = () => {
   };
 
   return (
-    <div className="servicos-page-wrapper">
-      {/* Sidebar */}
-      <div className="sidebar">
-        <div className="sidebar-item" onClick={() => toggleView("agendamentos")}>  
-          <span className="icon">📅</span>
-          <span className="label">Meus Agendamentos</span>
-        </div>
-        <div className="sidebar-item" onClick={() => toggleView("servicos")}>  
-          <span className="icon">📋</span>
-          <span className="label">Serviços</span>
-        </div>
-        <div className="sidebar-item" onClick={() => toggleView("calendario")}>  
-          <span className="icon">🗓️</span>
-          <span className="label">Calendário</span>
-        </div>
-        <div className="sidebar-item" onClick={() => toggleView("historico")}>  
-          <span className="icon">📜</span>
-          <span className="label">Histórico</span>
-        </div>
-        <div className="sidebar-item" onClick={() => setShowLixeira(true)}>  
-          <span className="icon">🗑️</span>
-          <span className="label">Lixeira</span>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="servicos-page-container">
-        {viewMode === "agendamentos" && (
-          <div className="tela-expandida">
-            <MeusAgendamentosCliente servicos={servicos} />
+      <div className="servicos-page-wrapper">
+        {/* Sidebar */}
+        <div className="sidebar">
+          <div className="sidebar-item" onClick={() => toggleView("agendamentos")}>  
+            <span className="icon">📅</span>
+            <span className="label">Meus Agendamentos</span>
           </div>
-        )}
-
-        {viewMode === "calendario" && (
-          <div className="tela-expandida">
-            <CalendarioServicos servicos={servicos} />
+          <div className="sidebar-item" onClick={() => toggleView("servicos")}>  
+            <span className="icon">📋</span>
+            <span className="label">Serviços</span>
           </div>
-        )}
+          <div className="sidebar-item" onClick={() => toggleView("historico")}>  
+            <span className="icon">📜</span>
+            <span className="label">Histórico</span>
+          </div>
+          <div className="sidebar-item" onClick={() => setShowLixeira(true)}>  
+            <span className="icon">🗑️</span>
+            <span className="label">Lixeira</span>
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div className="servicos-page-container">
+          {viewMode === "agendamentos" && (
+            <div className="tela-expandida">
+              <MeusAgendamentosCliente servicos={servicos} />
+            </div>
+          )}
 
         {viewMode === "historico" && (
           <div className="tela-expandida">
