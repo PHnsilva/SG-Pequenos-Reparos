@@ -31,7 +31,7 @@ const ServicosPage = () => {
   };
 
   const toggleView = (target) => {
-    setShowLixeira(false);  // fecha lixeira ao trocar de view
+    setShowLixeira(false); // fecha lixeira ao trocar de view
     setViewMode((prev) => (prev === target ? "servicos" : target));
   };
 
@@ -48,22 +48,23 @@ const ServicosPage = () => {
   };
 
   return (
+    <>
       <div className="servicos-page-wrapper">
         {/* Sidebar */}
         <div className="sidebar">
-          <div className="sidebar-item" onClick={() => toggleView("agendamentos")}>  
+          <div className="sidebar-item" onClick={() => toggleView("agendamentos")}>
             <span className="icon">📅</span>
             <span className="label">Meus Agendamentos</span>
           </div>
-          <div className="sidebar-item" onClick={() => toggleView("servicos")}>  
+          <div className="sidebar-item" onClick={() => toggleView("servicos")}>
             <span className="icon">📋</span>
             <span className="label">Serviços</span>
           </div>
-          <div className="sidebar-item" onClick={() => toggleView("historico")}>  
+          <div className="sidebar-item" onClick={() => toggleView("historico")}>
             <span className="icon">📜</span>
             <span className="label">Histórico</span>
           </div>
-          <div className="sidebar-item" onClick={() => setShowLixeira(true)}>  
+          <div className="sidebar-item" onClick={() => setShowLixeira(true)}>
             <span className="icon">🗑️</span>
             <span className="label">Lixeira</span>
           </div>
@@ -77,11 +78,11 @@ const ServicosPage = () => {
             </div>
           )}
 
-        {viewMode === "historico" && (
-          <div className="tela-expandida">
-            <HistoricoServicosPage servicos={servicos} />
-          </div>
-        )}
+          {viewMode === "historico" && (
+            <div className="tela-expandida">
+              <HistoricoServicosPage servicos={servicos} />
+            </div>
+          )}
 
           {viewMode === "servicos" && (
             <div className="servicos-content">
@@ -145,7 +146,7 @@ const ServicosPage = () => {
         </div>
       </div>
 
-      {/* ModalLixeira fora de qualquer condição de viewMode */}
+      {/* Modal Lixeira sempre renderizado no root do componente (fora do wrapper) */}
       {showLixeira && (
         <ModalLixeira
           onClose={() => setShowLixeira(false)}

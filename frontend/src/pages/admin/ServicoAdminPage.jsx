@@ -13,11 +13,15 @@ const STATUS_ABAS = [
   { codigo: "CONCLUIDO", label: "Concluídos", icon: "✅" },
 ];
 
+const normalizarTelefone = (t = "") =>
+  String(t).replace(/\D/g, "").replace(/^55/, "");
+
 const ServicoAdminPage = () => {
   const [servicos, setServicos] = useState([]);
   const [viewMode, setViewMode] = useState("servicos"); // 'servicos' | 'calendario' | 'historico' | 'agendamentos'
   const [statusSelecionado, setStatusSelecionado] = useState("SOLICITADO");
   const [showLixeira, setShowLixeira] = useState(false);
+  const [filtroTelefone, setFiltroTelefone] = useState("");
 
   // Busca serviços
   const fetchServicos = async () => {
@@ -40,30 +44,40 @@ const ServicoAdminPage = () => {
   }, []);
 
   // Filtragem
-  const servicosFiltrados = servicos.filter((s) => s.status === statusSelecionado);
+  const servicosFiltradosPorStatus = servicos.filter(
+    (s) => s.status === statusSelecionado
+  );
+
+  const servicosFiltrados = servicosFiltradosPorStatus.filter((s) => {
+    if (!filtroTelefone) return true;
+    return normalizarTelefone(s.telefoneContato).includes(
+      normalizarTelefone(filtroTelefone)
+    );
+  });
+
   const servicosCancelados = servicos.filter((s) => s.status === "CANCELADO");
 
   return (
     <div className="servicos-page-wrapper">
       {/* Sidebar */}
       <div className="sidebar">
-        <div className="sidebar-item" onClick={() => toggleView("agendamentos")}>  
+        <div className="sidebar-item" onClick={() => toggleView("agendamentos")}>
           <span className="icon">📅</span>
           <span className="label">Meus Agendamentos</span>
         </div>
-        <div className="sidebar-item" onClick={() => toggleView("servicos")}>  
+        <div className="sidebar-item" onClick={() => toggleView("servicos")}>
           <span className="icon">📋</span>
           <span className="label">Serviços</span>
         </div>
-        <div className="sidebar-item" onClick={() => toggleView("calendario")}>  
+        <div className="sidebar-item" onClick={() => toggleView("calendario")}>
           <span className="icon">🗓️</span>
           <span className="label">Calendário</span>
         </div>
-        <div className="sidebar-item" onClick={() => toggleView("historico")}>  
+        <div className="sidebar-item" onClick={() => toggleView("historico")}>
           <span className="icon">📜</span>
           <span className="label">Histórico</span>
         </div>
-        <div className="sidebar-item" onClick={() => setShowLixeira(true)}>  
+        <div className="sidebar-item" onClick={() => setShowLixeira(true)}>
           <span className="icon">🗑️</span>
           <span className="label">Lixeira</span>
         </div>
@@ -104,6 +118,21 @@ const ServicoAdminPage = () => {
                   <span className="aba-icon">{icon}</span> {label}
                 </button>
               ))}
+            </div>
+
+            {/* Filtro por telefone */}
+            <div className="filtro-telefone">
+              <label htmlFor="filtroTelefone">Pesquisar por telefone:</label>
+              <input
+                id="filtroTelefone"
+                type="text"
+                placeholder="Ex: 3199... (funciona mesmo se número armazenado tiver +55)"
+                value={filtroTelefone}
+                onChange={(e) => setFiltroTelefone(e.target.value)}
+              />
+              {filtroTelefone && (
+                <Button onClick={() => setFiltroTelefone("")}>Limpar</Button>
+              )}
             </div>
 
             {/* Lista */}
