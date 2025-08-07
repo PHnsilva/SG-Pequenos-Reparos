@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import CalendarioServicos from "../components/CalendarioServicos";
 import ModalSolicitarServico from "../components/ModalSolicitarServico";
 import ModalLixeira from "../components/ModalLixeira";
 import { listarServicos } from "../services/servicoService";
@@ -49,7 +48,6 @@ const ServicosPage = () => {
   };
 
   return (
-    <>
       <div className="servicos-page-wrapper">
         {/* Sidebar */}
         <div className="sidebar">
@@ -60,10 +58,6 @@ const ServicosPage = () => {
           <div className="sidebar-item" onClick={() => toggleView("servicos")}>  
             <span className="icon">📋</span>
             <span className="label">Serviços</span>
-          </div>
-          <div className="sidebar-item" onClick={() => toggleView("calendario")}>  
-            <span className="icon">🗓️</span>
-            <span className="label">Calendário</span>
           </div>
           <div className="sidebar-item" onClick={() => toggleView("historico")}>  
             <span className="icon">📜</span>
@@ -83,17 +77,11 @@ const ServicosPage = () => {
             </div>
           )}
 
-          {viewMode === "calendario" && (
-            <div className="tela-expandida">
-              <CalendarioServicos servicos={servicos} />
-            </div>
-          )}
-
-          {viewMode === "historico" && (
-            <div className="tela-expandida">
-              <HistoricoServicosPage servicos={servicos} />
-            </div>
-          )}
+        {viewMode === "historico" && (
+          <div className="tela-expandida">
+            <HistoricoServicosPage servicos={servicos} />
+          </div>
+        )}
 
           {viewMode === "servicos" && (
             <div className="servicos-content">
