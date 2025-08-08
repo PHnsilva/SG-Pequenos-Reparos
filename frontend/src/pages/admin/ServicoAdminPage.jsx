@@ -13,14 +13,13 @@ const STATUS_ABAS = [
   { codigo: "CONCLUIDO", label: "Concluídos", icon: "✅" },
 ];
 
-const normalizarTelefone = (t = "") =>
-  String(t).replace(/\D/g, "").replace(/^55/, "");
-
 const ServicoAdminPage = () => {
   const [servicos, setServicos] = useState([]);
   const [viewMode, setViewMode] = useState("servicos"); // 'servicos' | 'calendario' | 'historico' | 'agendamentos'
   const [statusSelecionado, setStatusSelecionado] = useState("SOLICITADO");
   const [showLixeira, setShowLixeira] = useState(false);
+
+  // filtro por telefone (aplica só à view de serviços)
   const [filtroTelefone, setFiltroTelefone] = useState("");
 
   // Busca serviços
@@ -43,41 +42,42 @@ const ServicoAdminPage = () => {
     fetchServicos();
   }, []);
 
-  // Filtragem
-  const servicosFiltradosPorStatus = servicos.filter(
-    (s) => s.status === statusSelecionado
-  );
+  // Normaliza telefone removendo +55 e não dígitos
+  const normalizarTelefone = (t) => (t || "").replace(/^\+55/, "").replace(/\D/g, "");
 
-  const servicosFiltrados = servicosFiltradosPorStatus.filter((s) => {
-    if (!filtroTelefone) return true;
-    return normalizarTelefone(s.telefoneContato).includes(
-      normalizarTelefone(filtroTelefone)
-    );
+  // Filtragem (aplica status + filtro de telefone quando houver)
+  const normalizedFilter = normalizarTelefone(filtroTelefone);
+
+  const servicosFiltrados = servicos.filter((s) => {
+    if (s.status !== statusSelecionado) return false;
+    if (!normalizedFilter) return true;
+    return normalizarTelefone(s.telefoneContato).includes(normalizedFilter);
   });
 
+  // Para a Lixeira (quando abrir o modal, ele terá seu próprio filtro local - aqui só passo os cancelados)
   const servicosCancelados = servicos.filter((s) => s.status === "CANCELADO");
 
   return (
     <div className="servicos-page-wrapper">
       {/* Sidebar */}
       <div className="sidebar">
-        <div className="sidebar-item" onClick={() => toggleView("agendamentos")}>
+        <div className="sidebar-item" onClick={() => toggleView("agendamentos")}>  
           <span className="icon">📅</span>
           <span className="label">Meus Agendamentos</span>
         </div>
-        <div className="sidebar-item" onClick={() => toggleView("servicos")}>
+        <div className="sidebar-item" onClick={() => toggleView("servicos")}>  
           <span className="icon">📋</span>
           <span className="label">Serviços</span>
         </div>
-        <div className="sidebar-item" onClick={() => toggleView("calendario")}>
+        <div className="sidebar-item" onClick={() => toggleView("calendario")}>  
           <span className="icon">🗓️</span>
           <span className="label">Calendário</span>
         </div>
-        <div className="sidebar-item" onClick={() => toggleView("historico")}>
+        <div className="sidebar-item" onClick={() => toggleView("historico")}>  
           <span className="icon">📜</span>
           <span className="label">Histórico</span>
         </div>
-        <div className="sidebar-item" onClick={() => setShowLixeira(true)}>
+        <div className="sidebar-item" onClick={() => setShowLixeira(true)}>  
           <span className="icon">🗑️</span>
           <span className="label">Lixeira</span>
         </div>
@@ -107,6 +107,19 @@ const ServicoAdminPage = () => {
           <div className="servicos-content">
             <h2 className="titulo-servicos">Gerenciamento de Serviços</h2>
 
+            {/* Campo de busca por telefone */}
+            <div className="filtro-telefone-area" style={{ marginBottom: "12px" }}>
+              <label htmlFor="filtroTelefone">Buscar por telefone:</label>
+              <input
+                id="filtroTelefone"
+                className="filtro-telefone-input"
+                type="text"
+                placeholder="Ex.: 3199... (ignora +55 e formatação)"
+                value={filtroTelefone}
+                onChange={(e) => setFiltroTelefone(e.target.value)}
+              />
+            </div>
+
             {/* Abas de Status: somente Solicitações e Concluídos */}
             <div className="abas-container">
               {STATUS_ABAS.map(({ codigo, label, icon }) => (
@@ -118,21 +131,6 @@ const ServicoAdminPage = () => {
                   <span className="aba-icon">{icon}</span> {label}
                 </button>
               ))}
-            </div>
-
-            {/* Filtro por telefone */}
-            <div className="filtro-telefone">
-              <label htmlFor="filtroTelefone">Pesquisar por telefone:</label>
-              <input
-                id="filtroTelefone"
-                type="text"
-                placeholder="Ex: 3199... (funciona mesmo se número armazenado tiver +55)"
-                value={filtroTelefone}
-                onChange={(e) => setFiltroTelefone(e.target.value)}
-              />
-              {filtroTelefone && (
-                <Button onClick={() => setFiltroTelefone("")}>Limpar</Button>
-              )}
             </div>
 
             {/* Lista */}
