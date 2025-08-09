@@ -16,7 +16,6 @@ const ServicosPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [abaSelecionada, setAbaSelecionada] = useState("Solicitados");
   const [viewMode, setViewMode] = useState("servicos");
-  const [viewMode, setViewMode] = useState("servicos");
   const [servicosExcluidos, setServicosExcluidos] = useState([]);
   const [showLixeira, setShowLixeira] = useState(false);
   const [mostrarAvisoZap, setMostrarAvisoZap] = useState(false);
@@ -35,7 +34,7 @@ const ServicosPage = () => {
   };
 
   const toggleView = (target) => {
-    setShowLixeira(false); // fecha lixeira ao trocar de view
+    setShowLixeira(false); // Fecha a lixeira ao mudar de view
     setViewMode((prev) => (prev === target ? "servicos" : target));
   };
 
@@ -52,42 +51,37 @@ const ServicosPage = () => {
   };
 
   return (
-    <div className="servicos-page-wrapper">
-      <div className="sidebar">
-        <div className="sidebar-item" onClick={() => toggleView("agendamentos")}>
-          <span className="icon">📅</span>
-          <span className="label">Meus Agendamentos</span>
-        </div>
-        <div className="sidebar-item" onClick={() => toggleView("servicos")}>
-          <span className="icon">📋</span>
-          <span className="label">Serviços</span>
-        </div>
-        <div className="sidebar-item" onClick={() => toggleView("calendario")}>
-          <span className="icon">🗓️</span>
-          <span className="label">Calendário</span>
-        </div>
-        <div className="sidebar-item" onClick={() => toggleView("historico")}>
-          <span className="icon">📜</span>
-          <span className="label">Histórico</span>
-        </div>
-        <div className="sidebar-item" onClick={() => setShowLixeira(true)}>
-          <span className="icon">🗑️</span>
-          <span className="label">Lixeira</span>
-        </div>
-      </div>
-
-      <div className="servicos-page-container">
-        {viewMode === "agendamentos" && (
-          <div className="tela-expandida">
-            <MeusAgendamentosCliente servicos={servicos} />
+    <>
+      <div className="servicos-page-wrapper">
+        <div className="sidebar">
+          <div className="sidebar-item" onClick={() => toggleView("agendamentos")}>
+            <span className="icon">📅</span>
+            <span className="label">Meus Agendamentos</span>
           </div>
-        )}
-
-        {viewMode === "calendario" && (
-          <div className="tela-expandida">
-            <CalendarioServicos servicos={servicos} />
+          <div className="sidebar-item" onClick={() => toggleView("servicos")}>
+            <span className="icon">📋</span>
+            <span className="label">Serviços</span>
           </div>
-        )}
+          {/* Calendário removido */}
+
+          <div className="sidebar-item" onClick={() => toggleView("historico")}>
+            <span className="icon">📜</span>
+            <span className="label">Histórico</span>
+          </div>
+          <div className="sidebar-item" onClick={() => setShowLixeira(true)}>
+            <span className="icon">🗑️</span>
+            <span className="label">Lixeira</span>
+          </div>
+        </div>
+
+        <div className="servicos-page-container">
+          {viewMode === "agendamentos" && (
+            <div className="tela-expandida">
+              <MeusAgendamentosCliente servicos={servicos} />
+            </div>
+          )}
+
+          {/* Calendário removido */}
 
           {viewMode === "historico" && (
             <div className="tela-expandida">
@@ -99,36 +93,36 @@ const ServicosPage = () => {
             <div className="servicos-content">
               <h2 className="titulo-servicos">Minhas Solicitações</h2>
 
-            <div className="abas-container">
-              {TABS.map((tab) => (
-                <button
-                  key={tab}
-                  className={`aba-button ${abaSelecionada === tab ? "ativa" : ""}`}
-                  onClick={() => setAbaSelecionada(tab)}
-                >
-                  {tab}
-                </button>
-              ))}
-            </div>
+              <div className="abas-container">
+                {TABS.map((tab) => (
+                  <button
+                    key={tab}
+                    className={`aba-button ${abaSelecionada === tab ? "ativa" : ""}`}
+                    onClick={() => setAbaSelecionada(tab)}
+                  >
+                    {tab}
+                  </button>
+                ))}
+              </div>
 
-            <div className="servicos-lista">
-              {filtrarServicosPorStatus().length === 0 ? (
-                <p className="mensagem-vazia">Nenhum serviço nesta aba.</p>
-              ) : (
-                filtrarServicosPorStatus().map((servico) => (
-                  <div key={servico.id} className="servico-card">
-                    <CardServico servico={servico} tipo={abaSelecionada.toLowerCase()} />
-                    <button
-                      className="btn-excluir"
-                      title="Excluir"
-                      onClick={() => handleExcluirServico(servico)}
-                    >
-                      🗑️
-                    </button>
-                  </div>
-                ))
-              )}
-            </div>
+              <div className="servicos-lista">
+                {filtrarServicosPorStatus().length === 0 ? (
+                  <p className="mensagem-vazia">Nenhum serviço nesta aba.</p>
+                ) : (
+                  filtrarServicosPorStatus().map((servico) => (
+                    <div key={servico.id} className="servico-card">
+                      <CardServico servico={servico} tipo={abaSelecionada.toLowerCase()} />
+                      <button
+                        className="btn-excluir"
+                        title="Excluir"
+                        onClick={() => handleExcluirServico(servico)}
+                      >
+                        🗑️
+                      </button>
+                    </div>
+                  ))
+                )}
+              </div>
 
               <div className="servicos-buttons">
                 <Button variant="contratar" onClick={() => setIsModalOpen(true)}>
@@ -136,22 +130,25 @@ const ServicosPage = () => {
                 </Button>
               </div>
 
-            {isModalOpen && (
-              <ModalSolicitarServico
-                onClose={() => setIsModalOpen(false)}
-                onServicoCriado={() => {
-                  fetchServicos();
-                  setIsModalOpen(false);
-                  setMostrarAvisoZap(true);
-                }}
-              />
-            )}
+              {isModalOpen && (
+                <ModalSolicitarServico
+                  onClose={() => setIsModalOpen(false)}
+                  onServicoCriado={() => {
+                    fetchServicos();
+                    setIsModalOpen(false);
+                    setMostrarAvisoZap(true);
+                  }}
+                />
+              )}
 
-            {mostrarAvisoZap && (
-              <ModalAvisoZAP onClose={() => setMostrarAvisoZap(false)} />
-            )}
+              {mostrarAvisoZap && (
+                <ModalAvisoZAP onClose={() => setMostrarAvisoZap(false)} />
+              )}
+            </div>
+          )}
+        </div>
+      </div>
 
-      {/* Modal Lixeira sempre renderizado no root do componente (fora do wrapper) */}
       {showLixeira && (
         <ModalLixeira
           onClose={() => setShowLixeira(false)}

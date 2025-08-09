@@ -35,3 +35,5 @@ const CardServico = ({ servico, tipo }) => {
     </div>
   );
 };
+
+export default CardServico;
