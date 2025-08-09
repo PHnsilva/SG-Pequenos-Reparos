@@ -10,7 +10,7 @@ import "../../styles/pages/ServicosPage.css";
 
 const STATUS_ABAS = [
   { codigo: "SOLICITADO", label: "Solicitados", icon: "📝" },
-  { codigo: "CONCLUIDO", label: "Concluídos", icon: "✅" },
+  // Removemos "CONCLUIDO" daqui
 ];
 
 const ServicoAdminPage = () => {
@@ -18,11 +18,8 @@ const ServicoAdminPage = () => {
   const [viewMode, setViewMode] = useState("servicos"); // 'servicos' | 'calendario' | 'historico' | 'agendamentos'
   const [statusSelecionado, setStatusSelecionado] = useState("SOLICITADO");
   const [showLixeira, setShowLixeira] = useState(false);
-
-  // filtro por telefone (aplica só à view de serviços)
   const [filtroTelefone, setFiltroTelefone] = useState("");
 
-  // Busca serviços
   const fetchServicos = async () => {
     try {
       const response = await listarServicos();
@@ -32,7 +29,6 @@ const ServicoAdminPage = () => {
     }
   };
 
-  // Alterna views
   const toggleView = (target) => {
     setShowLixeira(false);
     setViewMode((prev) => (prev === target ? "servicos" : target));
@@ -42,24 +38,26 @@ const ServicoAdminPage = () => {
     fetchServicos();
   }, []);
 
-  // Normaliza telefone removendo +55 e não dígitos
   const normalizarTelefone = (t) => (t || "").replace(/^\+55/, "").replace(/\D/g, "");
-
-  // Filtragem (aplica status + filtro de telefone quando houver)
   const normalizedFilter = normalizarTelefone(filtroTelefone);
 
+  // Filtra para página Serviços (status solicitados)
   const servicosFiltrados = servicos.filter((s) => {
     if (s.status !== statusSelecionado) return false;
     if (!normalizedFilter) return true;
     return normalizarTelefone(s.telefoneContato).includes(normalizedFilter);
   });
 
-  // Para a Lixeira (quando abrir o modal, ele terá seu próprio filtro local - aqui só passo os cancelados)
+  // Serviços cancelados para a lixeira
   const servicosCancelados = servicos.filter((s) => s.status === "CANCELADO");
+
+  // Serviços para agendamentos (ACEITO e CONCLUIDO)
+  const servicosAgendadosEConcluidos = servicos.filter(
+    (s) => s.status === "ACEITO" || s.status === "CONCLUIDO"
+  );
 
   return (
     <div className="servicos-page-wrapper">
-      {/* Sidebar */}
       <div className="sidebar">
         <div className="sidebar-item" onClick={() => toggleView("agendamentos")}>
           <span className="icon">📅</span>
@@ -83,11 +81,10 @@ const ServicoAdminPage = () => {
         </div>
       </div>
 
-      {/* Main Content */}
       <div className="servicos-page-container">
         {viewMode === "agendamentos" && (
           <div className="tela-expandida">
-            <MeusAgendamentosAdmin servicos={servicos} />
+            <MeusAgendamentosAdmin servicos={servicosAgendadosEConcluidos} />
           </div>
         )}
 
@@ -107,7 +104,6 @@ const ServicoAdminPage = () => {
           <div className="servicos-content">
             <h2 className="titulo-servicos">Gerenciamento de Serviços</h2>
 
-            {/* Campo de busca por telefone */}
             <div className="filtro-telefone-area" style={{ marginBottom: "12px" }}>
               <label htmlFor="filtroTelefone">Buscar por telefone:</label>
               <input
@@ -120,7 +116,6 @@ const ServicoAdminPage = () => {
               />
             </div>
 
-            {/* Abas de Status: somente Solicitações e Concluídos */}
             <div className="abas-container">
               {STATUS_ABAS.map(({ codigo, label, icon }) => (
                 <button
@@ -133,7 +128,6 @@ const ServicoAdminPage = () => {
               ))}
             </div>
 
-            {/* Lista */}
             <div className="servicos-lista">
               {servicosFiltrados.length === 0 ? (
                 <p className="mensagem-vazia">
@@ -143,19 +137,19 @@ const ServicoAdminPage = () => {
                 <ListaServicosAdmin
                   servicos={servicosFiltrados}
                   onServicoAtualizado={fetchServicos}
-                  isAdmin={true} // indica admin
+                  isAdmin={true}
                 />
               )}
             </div>
           </div>
         )}
 
-        {/* Modal Lixeira como overlay */}
         {showLixeira && (
           <ModalLixeira
             onClose={() => setShowLixeira(false)}
             servicosCancelados={servicosCancelados}
             servicosExcluidos={[]}
+            isAdmin={true}
           />
         )}
       </div>
