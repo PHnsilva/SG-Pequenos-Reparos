@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import CalendarioServicos from "../components/CalendarioServicos";
 import ModalSolicitarServico from "../components/ModalSolicitarServico";
 import ModalLixeira from "../components/ModalLixeira";
 import { listarServicos } from "../services/servicoService";
@@ -16,6 +15,7 @@ const ServicosPage = () => {
   const [servicos, setServicos] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [abaSelecionada, setAbaSelecionada] = useState("Solicitados");
+  const [viewMode, setViewMode] = useState("servicos");
   const [viewMode, setViewMode] = useState("servicos");
   const [servicosExcluidos, setServicosExcluidos] = useState([]);
   const [showLixeira, setShowLixeira] = useState(false);
@@ -35,7 +35,7 @@ const ServicosPage = () => {
   };
 
   const toggleView = (target) => {
-    setShowLixeira(false);
+    setShowLixeira(false); // fecha lixeira ao trocar de view
     setViewMode((prev) => (prev === target ? "servicos" : target));
   };
 
@@ -45,14 +45,10 @@ const ServicosPage = () => {
   };
 
   const filtrarServicosPorStatus = () => {
-    switch (abaSelecionada) {
-      case "Solicitados":
-        return servicos.filter((s) => s.status === "SOLICITADO");
-      case "Concluídos":
-        return servicos.filter((s) => s.status === "CONCLUIDO");
-      default:
-        return [];
+    if (abaSelecionada === "Solicitados") {
+      return servicos.filter((s) => s.status === "SOLICITADO");
     }
+    return servicos.filter((s) => s.status === "CONCLUIDO");
   };
 
   return (
@@ -93,15 +89,15 @@ const ServicosPage = () => {
           </div>
         )}
 
-        {viewMode === "historico" && (
-          <div className="tela-expandida">
-            <HistoricoServicosPage servicos={servicos} />
-          </div>
-        )}
+          {viewMode === "historico" && (
+            <div className="tela-expandida">
+              <HistoricoServicosPage servicos={servicos} />
+            </div>
+          )}
 
-        {viewMode === "servicos" && (
-          <div className="servicos-content">
-            <h2 className="titulo-servicos">Minhas Solicitações</h2>
+          {viewMode === "servicos" && (
+            <div className="servicos-content">
+              <h2 className="titulo-servicos">Minhas Solicitações</h2>
 
             <div className="abas-container">
               {TABS.map((tab) => (
@@ -134,11 +130,11 @@ const ServicosPage = () => {
               )}
             </div>
 
-            <div className="servicos-buttons">
-              <Button variant="contratar" onClick={() => setIsModalOpen(true)}>
-                Solicitar Novo Serviço
-              </Button>
-            </div>
+              <div className="servicos-buttons">
+                <Button variant="contratar" onClick={() => setIsModalOpen(true)}>
+                  Solicitar Novo Serviço
+                </Button>
+              </div>
 
             {isModalOpen && (
               <ModalSolicitarServico
@@ -155,17 +151,15 @@ const ServicosPage = () => {
               <ModalAvisoZAP onClose={() => setMostrarAvisoZap(false)} />
             )}
 
-            {showLixeira && (
-              <ModalLixeira
-                onClose={() => setShowLixeira(false)}
-                servicosCancelados={servicos.filter((s) => s.status === "CANCELADO")}
-                servicosExcluidos={servicosExcluidos}
-              />
-            )}
-          </div>
-        )}
-      </div>
-    </div>
+      {/* Modal Lixeira sempre renderizado no root do componente (fora do wrapper) */}
+      {showLixeira && (
+        <ModalLixeira
+          onClose={() => setShowLixeira(false)}
+          servicosCancelados={servicos.filter((s) => s.status === "CANCELADO")}
+          servicosExcluidos={servicosExcluidos}
+        />
+      )}
+    </>
   );
 };
 

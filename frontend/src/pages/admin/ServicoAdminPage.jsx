@@ -19,6 +19,9 @@ const ServicoAdminPage = () => {
   const [statusSelecionado, setStatusSelecionado] = useState("SOLICITADO");
   const [showLixeira, setShowLixeira] = useState(false);
 
+  // filtro por telefone (aplica só à view de serviços)
+  const [filtroTelefone, setFiltroTelefone] = useState("");
+
   // Busca serviços
   const fetchServicos = async () => {
     try {
@@ -39,8 +42,19 @@ const ServicoAdminPage = () => {
     fetchServicos();
   }, []);
 
-  // Filtragem
-  const servicosFiltrados = servicos.filter((s) => s.status === statusSelecionado);
+  // Normaliza telefone removendo +55 e não dígitos
+  const normalizarTelefone = (t) => (t || "").replace(/^\+55/, "").replace(/\D/g, "");
+
+  // Filtragem (aplica status + filtro de telefone quando houver)
+  const normalizedFilter = normalizarTelefone(filtroTelefone);
+
+  const servicosFiltrados = servicos.filter((s) => {
+    if (s.status !== statusSelecionado) return false;
+    if (!normalizedFilter) return true;
+    return normalizarTelefone(s.telefoneContato).includes(normalizedFilter);
+  });
+
+  // Para a Lixeira (quando abrir o modal, ele terá seu próprio filtro local - aqui só passo os cancelados)
   const servicosCancelados = servicos.filter((s) => s.status === "CANCELADO");
 
   return (
@@ -92,6 +106,19 @@ const ServicoAdminPage = () => {
         {viewMode === "servicos" && (
           <div className="servicos-content">
             <h2 className="titulo-servicos">Gerenciamento de Serviços</h2>
+
+            {/* Campo de busca por telefone */}
+            <div className="filtro-telefone-area" style={{ marginBottom: "12px" }}>
+              <label htmlFor="filtroTelefone">Buscar por telefone:</label>
+              <input
+                id="filtroTelefone"
+                className="filtro-telefone-input"
+                type="text"
+                placeholder="Ex.: 3199... (ignora +55 e formatação)"
+                value={filtroTelefone}
+                onChange={(e) => setFiltroTelefone(e.target.value)}
+              />
+            </div>
 
             {/* Abas de Status: somente Solicitações e Concluídos */}
             <div className="abas-container">
