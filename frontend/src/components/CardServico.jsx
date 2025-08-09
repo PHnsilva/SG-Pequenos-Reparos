@@ -1,10 +1,10 @@
-const CardServico = ({ servico, tipo }) => {
+const CardServico = ({ servico, tipo, isAdmin = false }) => {
   const formatarData = (isoDate) => {
     const [ano, mes, dia] = isoDate.split("-");
     return new Date(ano, mes - 1, dia).toLocaleDateString("pt-BR");
   };
 
-  const zapLink = "https://wa.me/5599999999999"; // link do Gelson
+  const zapLink = "https://wa.me/5598987654321"; // número correto do Gelson
 
   return (
     <div className="card-servico">
@@ -22,7 +22,7 @@ const CardServico = ({ servico, tipo }) => {
         </p>
       )}
 
-      {servico.status === "SOLICITADO" && (
+      {!isAdmin && servico.status === "SOLICITADO" && (
         <a
           href={zapLink}
           target="_blank"

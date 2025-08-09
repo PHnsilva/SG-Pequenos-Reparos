@@ -13,7 +13,7 @@ import { toast } from "react-toastify";
 import "../../styles/components/ListaServicos.css";
 import { CheckCircle } from "lucide-react";
 
-const ListaServicosAdmin = ({ servicos, onServicoAtualizado }) => {
+const ListaServicosAdmin = ({ servicos, onServicoAtualizado, isAdmin = true }) => {
   const [servicoAtual, setServicoAtual] = useState(null);
   const [mostrarModalDetalhes, setMostrarModalDetalhes] = useState(false);
   const [mostrarModalAgendar, setMostrarModalAgendar] = useState(false);
@@ -109,7 +109,11 @@ const ListaServicosAdmin = ({ servicos, onServicoAtualizado }) => {
             <div className="verificar-icone" onClick={() => toggleVerificado(servico.id)}>
               <CheckCircle size={24} color={verificado ? "#2ecc71" : "#ccc"} />
             </div>
-            <CardServico servico={servico} tipo={servico.status.toLowerCase()} />
+            <CardServico
+              servico={servico}
+              tipo={servico.status.toLowerCase()}
+              isAdmin={isAdmin}  // <-- passa a prop isAdmin aqui
+            />
             {renderAcoes(servico)}
           </div>
         );

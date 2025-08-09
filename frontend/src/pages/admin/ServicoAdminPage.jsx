@@ -61,23 +61,23 @@ const ServicoAdminPage = () => {
     <div className="servicos-page-wrapper">
       {/* Sidebar */}
       <div className="sidebar">
-        <div className="sidebar-item" onClick={() => toggleView("agendamentos")}>  
+        <div className="sidebar-item" onClick={() => toggleView("agendamentos")}>
           <span className="icon">📅</span>
           <span className="label">Meus Agendamentos</span>
         </div>
-        <div className="sidebar-item" onClick={() => toggleView("servicos")}>  
+        <div className="sidebar-item" onClick={() => toggleView("servicos")}>
           <span className="icon">📋</span>
           <span className="label">Serviços</span>
         </div>
-        <div className="sidebar-item" onClick={() => toggleView("calendario")}>  
+        <div className="sidebar-item" onClick={() => toggleView("calendario")}>
           <span className="icon">🗓️</span>
           <span className="label">Calendário</span>
         </div>
-        <div className="sidebar-item" onClick={() => toggleView("historico")}>  
+        <div className="sidebar-item" onClick={() => toggleView("historico")}>
           <span className="icon">📜</span>
           <span className="label">Histórico</span>
         </div>
-        <div className="sidebar-item" onClick={() => setShowLixeira(true)}>  
+        <div className="sidebar-item" onClick={() => setShowLixeira(true)}>
           <span className="icon">🗑️</span>
           <span className="label">Lixeira</span>
         </div>
@@ -143,6 +143,7 @@ const ServicoAdminPage = () => {
                 <ListaServicosAdmin
                   servicos={servicosFiltrados}
                   onServicoAtualizado={fetchServicos}
+                  isAdmin={true} // indica admin
                 />
               )}
             </div>
