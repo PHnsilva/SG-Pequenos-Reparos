@@ -1,23 +1,22 @@
-// ModalLixeira.jsx
 import React, { useState } from "react";
 import "../styles/components/ModalLixeira.css";
 
 const ModalLixeira = ({
   onClose,
-  servicosCancelados = [],    // valores padrão
-  servicosExcluidos = []
+  servicosCancelados = [],
+  servicosExcluidos = [],
+  isAdmin = false, // novo prop
 }) => {
-  const [aba, setAba] = useState("excluidos"); // "excluidos" ou "cancelados"
+  const [aba, setAba] = useState("excluidos");
   const [filtroTelefone, setFiltroTelefone] = useState("");
 
   const normalizarTelefone = (t) => (t || "").replace(/^\+55/, "").replace(/\D/g, "");
   const normalizedFilter = normalizarTelefone(filtroTelefone);
 
-  // escolhe o array correto, sempre um array
-  const servicosAtivos =
-    aba === "cancelados" ? servicosCancelados : servicosExcluidos;
+  const servicosAtivos = aba === "cancelados" ? servicosCancelados : servicosExcluidos;
 
   const servicosAtivosFiltrados = servicosAtivos.filter((s) => {
+    if (!isAdmin) return true; // se não for admin, ignora filtro
     if (!normalizedFilter) return true;
     return normalizarTelefone(s.telefoneContato).includes(normalizedFilter);
   });
@@ -45,16 +44,19 @@ const ModalLixeira = ({
           </button>
         </div>
 
-        <div className="filtro-telefone-lixeira" style={{ margin: "8px 0" }}>
-          <label htmlFor="filtroTelefoneLixeira">Buscar por telefone:</label>
-          <input
-            id="filtroTelefoneLixeira"
-            type="text"
-            placeholder="Ex.: 3199... (ignora +55)"
-            value={filtroTelefone}
-            onChange={(e) => setFiltroTelefone(e.target.value)}
-          />
-        </div>
+        {/* Mostrar filtro só se admin */}
+        {isAdmin && (
+          <div className="filtro-telefone-lixeira" style={{ margin: "8px 0" }}>
+            <label htmlFor="filtroTelefoneLixeira">Buscar por telefone:</label>
+            <input
+              id="filtroTelefoneLixeira"
+              type="text"
+              placeholder="Ex.: 3199... (ignora +55)"
+              value={filtroTelefone}
+              onChange={(e) => setFiltroTelefone(e.target.value)}
+            />
+          </div>
+        )}
 
         <div className="lista-lixeira">
           {servicosAtivosFiltrados.length === 0 ? (
@@ -74,5 +76,6 @@ const ModalLixeira = ({
     </div>
   );
 };
+
 
 export default ModalLixeira;
