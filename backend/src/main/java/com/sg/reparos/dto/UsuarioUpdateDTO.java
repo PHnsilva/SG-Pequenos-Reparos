@@ -2,7 +2,6 @@ package com.sg.reparos.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Size;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -11,11 +10,6 @@ public class UsuarioUpdateDTO {
     @NotBlank(message = "Nome é obrigatório")
     @Schema(description = "Nome do usuário", example = "Felipe Parreiras")
     private String nome;
-
-    @NotBlank(message = "Email é obrigatório")
-    @Email(message = "Formato de email inválido")
-    @Schema(description = "Email do usuário", example = "felipe@email.com")
-    private String email;
 
     @NotBlank(message = "Telefone é obrigatório")
     @Schema(description = "Telefone do usuário", example = "31999998888")
@@ -35,12 +29,7 @@ public class UsuarioUpdateDTO {
     public void setNome(String nome) {
         this.nome = nome;
     }
-    public String getEmail() {
-        return email;
-    }
-    public void setEmail(String email) {
-        this.email = email;
-    }
+
     public String getTelefone() {
         return telefone;
     }

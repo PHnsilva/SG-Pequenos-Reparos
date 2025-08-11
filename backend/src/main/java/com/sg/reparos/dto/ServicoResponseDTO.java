@@ -14,7 +14,6 @@ public class ServicoResponseDTO {
     private String tipoServico;
     private Long clienteId;
     private String clienteNome;
-    private String emailContato;
     private String telefoneContato;
     private LocalDate diaEspecifico;
     private List<LocalDate> outrosDias;
@@ -34,7 +33,6 @@ public class ServicoResponseDTO {
         this.tipoServico = servico.getTipoServico().getNome();
         this.clienteId = servico.getCliente().getId();
         this.clienteNome = servico.getCliente().getNome();
-        this.emailContato = servico.getEmailContato();
         this.telefoneContato = servico.getTelefoneContato();
         this.diaEspecifico = servico.getDiaEspecifico();
         this.outrosDias = servico.getOutrosDiasDisponiveis();
@@ -91,14 +89,6 @@ public class ServicoResponseDTO {
 
     public void setClienteNome(String clienteNome) {
         this.clienteNome = clienteNome;
-    }
-
-    public String getEmailContato() {
-        return emailContato;
-    }
-
-    public void setEmailContato(String emailContato) {
-        this.emailContato = emailContato;
     }
 
     public String getTelefoneContato() {

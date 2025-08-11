@@ -24,10 +24,6 @@ public class ServicoRequestDTO {
     @NotNull(message = "O ID do cliente é obrigatório.")
     private Long clienteId;
 
-    @NotBlank(message = "O e-mail de contato é obrigatório.")
-    @Email(message = "O e-mail informado é inválido.")
-    private String emailContato;
-
     @NotBlank(message = "O telefone de contato é obrigatório.")
     private String telefoneContato;
 
@@ -84,14 +80,7 @@ public class ServicoRequestDTO {
     public void setClienteId(Long clienteId) {
         this.clienteId = clienteId;
     }
-
-    public String getEmailContato() {
-        return emailContato;
-    }
-
-    public void setEmailContato(String emailContato) {
-        this.emailContato = emailContato;
-    }
+    
      public LocalDate getDiaEspecifico() {
         return diaEspecifico;
     }

@@ -39,9 +39,6 @@ public class Servico {
     private Usuario administrador; // Só preenchido quando aceito
 
     @Column(nullable = false)
-    private String emailContato;
-
-    @Column(nullable = false)
     private String telefoneContato;
     @Column(nullable = false)
     private LocalDate diaEspecifico;
@@ -117,14 +114,6 @@ public class Servico {
 
     public void setAdministrador(Usuario administrador) {
         this.administrador = administrador;
-    }
-
-    public String getEmailContato() {
-        return emailContato;
-    }
-
-    public void setEmailContato(String emailContato) {
-        this.emailContato = emailContato;
     }
 
     public String getTelefoneContato() {

@@ -51,7 +51,6 @@ public class ServicoService {
         Servico servico = new Servico();
         servico.setNome(dto.getNome());
         servico.setDescricao(dto.getDescricao());
-        servico.setEmailContato(dto.getEmailContato());
         servico.setTelefoneContato(dto.getTelefoneContato());
         servico.setStatus(StatusServico.SOLICITADO);
         servico.setDiaEspecifico(dto.getDiaEspecifico());
@@ -186,7 +185,6 @@ public class ServicoService {
 
         servico.setNome(dto.getNome());
         servico.setDescricao(dto.getDescricao());
-        servico.setEmailContato(dto.getEmailContato());
         servico.setTelefoneContato(dto.getTelefoneContato());
 
         TipoServico tipo = tipoServicoRepository.findById(dto.getTipoServicoId())
@@ -300,7 +298,6 @@ public class ServicoService {
         dto.setTipoServico(servico.getTipoServico().getNome());
         dto.setClienteId(servico.getCliente().getId());
         dto.setClienteNome(servico.getCliente().getNome());
-        dto.setEmailContato(servico.getEmailContato());
         dto.setTelefoneContato(servico.getTelefoneContato());
         dto.setStatus(servico.getStatus().name());
         if (servico.getAdministrador() != null) {
