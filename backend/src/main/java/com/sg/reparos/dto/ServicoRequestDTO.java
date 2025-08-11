@@ -80,7 +80,7 @@ public class ServicoRequestDTO {
     public void setClienteId(Long clienteId) {
         this.clienteId = clienteId;
     }
-    
+
      public LocalDate getDiaEspecifico() {
         return diaEspecifico;
     }
