@@ -11,7 +11,6 @@ const CadastroPage = () => {
 
   const [formData, setFormData] = useState({
     nome: '',
-    email: '',
     telefone: '',
     username: '',
     tipo: 'CLIENTE',
@@ -22,6 +21,15 @@ const CadastroPage = () => {
   const [verificationCode, setVerificationCode] = useState('');
   const [codeSent, setCodeSent] = useState(false);
   const [error, setError] = useState('');
+
+  const handleUnifiedChange = (e) => {
+    const value = e.target.value;
+    setFormData({
+      ...formData,
+      nome: value,
+      username: value
+    });
+  };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -76,12 +84,40 @@ const CadastroPage = () => {
         <h2 className="cadastro-box-title">Cadastro</h2>
         {error && <p className="cadastro-box-error">{error}</p>}
         <form onSubmit={handleSubmit} className="cadastro-box-form-element">
-          <Input label="Nome" name="nome" value={formData.nome} onChange={handleChange} required />
-          <Input label="Email" name="email" value={formData.email} onChange={handleChange} required type="email" />
-          <Input label="Telefone (+55...)" name="telefone" value={formData.telefone} onChange={handleChange} required />
-          <Input label="Nome de Usuário" name="username" value={formData.username} onChange={handleChange} required />
-          <Input label="Senha" name="senha" value={formData.senha} onChange={handleChange} required type="password" />
-          <Input label="Confirmar Senha" name="confirmarSenha" value={confirmarSenha} onChange={(e) => setConfirmarSenha(e.target.value)} required type="password" />
+          {/* Campo único que atualiza nome e username */}
+          <Input
+            label="Nome / Nome de Usuário"
+            name="nomeUsername"
+            value={formData.nome}
+            onChange={handleUnifiedChange}
+            required
+          />
+
+          <Input
+            label="Telefone (+55...)"
+            name="telefone"
+            value={formData.telefone}
+            onChange={handleChange}
+            required
+          />
+
+          <Input
+            label="Senha"
+            name="senha"
+            value={formData.senha}
+            onChange={handleChange}
+            required
+            type="password"
+          />
+
+          <Input
+            label="Confirmar Senha"
+            name="confirmarSenha"
+            value={confirmarSenha}
+            onChange={(e) => setConfirmarSenha(e.target.value)}
+            required
+            type="password"
+          />
 
           {codeSent && (
             <Input
